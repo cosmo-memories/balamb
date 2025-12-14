@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="row d-flex justify-content-between">
+        <div class="col-auto">
+            <h1 class="text-primary">Login</h1>
+        </div>
+    </div>
+    <hr class="mt-0">
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <p>
+        <form th:action="@{/login}" method="post">
+            <div><label> User Name : <input type="text" name="email"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+    </p>
+</section>
+
+</body>
+</html>

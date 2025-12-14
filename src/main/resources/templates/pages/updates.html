@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml" layout:decorate="~{layouts/default}">
+<head>
+    <title>Updates</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="row d-flex justify-content-between">
+        <div class="col-auto">
+            <h1 class="text-primary">Project Updates</h1>
+        </div>
+        <div class="col-auto">
+            <p sec:authorize="isAuthenticated()">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateModal">Add Update</button>
+            </p>
+        </div>
+    </div>
+    <hr class="mt-0">
+
+    <p th:if="${error}" th:text="${errorText}"></p>
+
+    <ul class="list-group list-group-flush">
+        <p th:if="${updateList.empty}">
+            No updates to show :(
+        </p>
+        <li class="list-group-item list-group-item-dark" th:each="post: ${updateList}">
+            <div class="d-flex w-100 justify-content-between">
+                <div class="d-flex">
+                    <h5 class="mb-1 text-black" th:text="${post.updateType.getLabel()}"></h5>
+                </div>
+                <div class="d-flex">
+                    <small class="text-black mx-2" th:text="${#temporals.format(post.created, 'dd-MM-yyyy')}"></small>
+                    <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-dark py-0 mx-2">Edit</a>
+                    <a sec:authorize="isAuthenticated()" th:onclick="'deleteUpdate(' + ${post.id} + ')'" class="btn btn-dark py-0">Delete</a>
+                </div>
+            </div>
+            <small th:text="${post.description}" style="word-break: break-all;"></small>
+        </li>
+    </ul>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+         data-bs-theme="dark" sec:authorize="isAuthenticated()">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalLabel">Post new update</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/admin/update}" th:object="${update}" method="post" id="update-form">
+                    <div class="modal-body">
+                        <textarea id="description" type="text" th:field="*{description}" placeholder="Text" class="form-control form-control-md"
+                                  minlength="1" maxlength="1000" required> </textarea>
+                        <select class="form-select form-select-sm mt-2" id="updateType" th:field="*{updateType}">
+                            <option th:each="updateType: ${updateType}" th:text="${updateType.getLabel()}" th:value="${updateType}"></option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="submit" value="Submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteUpdate(id) {
+            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch("/admin/update/" + id, {
+                method: "DELETE",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    [header]: token
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("Something went wrong!")
+                }
+            });
+        }
+
+    </script>
+</section>
+
+</body>
+</html>

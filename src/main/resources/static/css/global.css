@@ -1,0 +1,16 @@
+body {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+h1, h2, h3, p, a, span, div {
+    color: #fff !important;
+}
+
+:root {
+    --bs-primary-rgb: 255, 255, 255 !important;
+}
+
+.text-primary {
+    color: rgba(var(--bs-primary-rgb), 1) !important;
+}

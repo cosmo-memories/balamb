@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title>Browse</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="row d-flex justify-content-between">
+        <div class="col-auto">
+            <h1 class="text-primary">Browse Records</h1>
+        </div>
+    </div>
+    <hr class="mt-0">
+        <div class="container my-4">
+            <form action="#" th:action="@{/browse}" method="get">
+                <div class="row">
+                    <div class="col d-flex align-items-center justify-content-end">
+                        <span>Filter search results:</span>
+                    </div>
+                    <div class="col">
+                        <select id="genre" name="genre" class="form-select" onchange="this.form.submit()">
+                            <option value="" disabled th:selected="${genre == null}">Genre</option>
+                            <option th:each="newGenre: ${genres}" th:text="${newGenre.getLabel()}" th:value="${newGenre}" th:selected="${newGenre == genre}">Genre</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select id="category" name="category" class="form-select" onchange="this.form.submit()">
+                            <option value="" disabled th:selected="${category == null}">Category</option>
+                            <option th:each="newCategory: ${categories}" th:text="${newCategory.getLabel()}" th:value="${newCategory}" th:selected="${newCategory == category}">Categories</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <a href="/browse" class="btn btn-secondary">Reset Filters</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <hr class="mt-0">
+    <p>
+        <div th:if="${bookList.empty}">
+            No books to show :(
+        </div>
+
+        <div class="card mb-3" th:each="book: ${bookList}">
+            <div class="row g-0">
+                <div class="col-md-1">
+                    <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." style="max-width: 100%;">
+                </div>
+                <div class="col-md-9">
+                    <div class="card-body bg-dark">
+                        <a th:href="@{/browse/{id}(id=${book.id})}">
+                            <h5 class="card-title text-white" th:text="${book.title}"></h5>
+                        </a>
+                        <p class="card-text text-secondary">
+                            by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
+                        </p>
+                        <p class="card-text">
+                            <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
+                            <b class="mx-1">•</b>
+                            <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card-body bg-dark justify-content-end" style="height: 100%">
+                        <p class="card-text">
+                            <b>
+                                <span th:text="${book.publisher}" class="text-secondary"></span>
+                                <span th:text="${book.pubYear}" class="text-secondary"></span>
+                            </b>
+                            <br />
+                            <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>
+                            <span th:text="${book.isbn}" class="text-secondary"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+<!--            <span th:text="${book.title}">Title</span>-->
+<!--            <span th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></span>-->
+<!--            <hr class="mt-3">-->
+        </div>
+    </p>
+</section>
+
+</body>
+</html>

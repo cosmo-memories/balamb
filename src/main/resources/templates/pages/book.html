@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title>Book</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="row d-flex justify-content-between">
+        <div class="col-auto">
+            <h1 class="text-primary">Book</h1>
+        </div>
+    </div>
+    <hr class="mt-0">
+    <p>
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-2">
+                    <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." style="max-width: 100%;">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body bg-dark" style="height: 100%">
+                        <h5 class="card-title text-white" th:text="${book.title}"></h5>
+                        <p class="card-text text-secondary">
+                            by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
+                        </p>
+                        <p class="card-text">
+                            <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
+                            <b class="mx-1">•</b>
+                            <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card-body bg-dark justify-content-end" style="height: 100%">
+                        <p class="card-text">
+                            <b>
+                                <span th:text="${book.publisher}" class="text-secondary"></span>
+                                <span th:text="${book.pubYear}" class="text-secondary"></span>
+                            </b>
+                            <br />
+                            <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>
+                            <span th:text="${book.isbn}" class="text-secondary"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p>
+    <p sec:authorize="isAuthenticated()">
+        Admin controls here.
+        <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="uploadedFile" accept="image/*" class="form-control-file">
+            </div>
+<!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+            <button type="submit" class="btn btn-primary">Upload image</button>
+        </form>
+    </p>
+</section>
+
+</body>
+</html>
