@@ -118,6 +118,16 @@ public class AdminController {
         }
     }
 
+    @DeleteMapping("/admin/book/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        try {
+            bookService.deleteBook(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Delete failed. The selected book may not exist.");
+        }
+    }
+
     @PostMapping("/admin/add/image/{id}")
     public String uploadImage(Model model, @PathVariable Long id, @RequestParam("uploadedFile") MultipartFile file) {
         Book book = bookService.findBookById(id).orElseThrow(() -> new IllegalArgumentException("Book does not exist"));

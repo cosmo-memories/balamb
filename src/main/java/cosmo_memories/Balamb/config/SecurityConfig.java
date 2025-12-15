@@ -25,6 +25,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .requestCache(cache -> cache.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .requestMatchers("/", "/about", "/updates", "/login", "/logout").permitAll()
@@ -41,7 +42,8 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/admin")
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("/admin");})
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());

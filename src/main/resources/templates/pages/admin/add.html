@@ -72,6 +72,21 @@
 
             <div class="row my-2">
                 <div class="col">
+                    <label for="series">Series</label>
+                    <span th:if="${#fields.hasErrors('series')}" th:errors="*{series}" class="text-danger"></span>
+                    <input id="series" type="text" th:field="*{series}" placeholder="Series" class="form-control"
+                           maxlength="30" />
+                </div>
+                <div class="col">
+                    <label for="note">Library Notes</label>
+                    <span th:if="${#fields.hasErrors('note')}" th:errors="*{note}" class="text-danger"></span>
+                    <input id="note" type="text" th:field="*{note}" placeholder="Notes" class="form-control"
+                           maxlength="500" />
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <div class="col">
                     <label for="pubYear">Publication Year</label>
                     <span th:if="${#fields.hasErrors('pubYear')}" th:errors="*{pubYear}" class="text-danger"></span>
                     <input id="pubYear" type="number" th:field="*{pubYear}" placeholder="Publication Year" class="form-control"

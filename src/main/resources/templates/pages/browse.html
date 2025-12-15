@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layouts/default}">
 <head>
     <title>Browse</title>
@@ -54,6 +55,9 @@
                             <h5 class="card-title text-white" th:text="${book.title}"></h5>
                         </a>
                         <p class="card-text text-secondary">
+                            <span th:text="${book.series}"></span>
+                        </p>
+                        <p class="card-text text-secondary">
                             by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
                         </p>
                         <p class="card-text">
@@ -73,15 +77,37 @@
                             <br />
                             <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>
                             <span th:text="${book.isbn}" class="text-secondary"></span>
+                            <br />
+                            <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-secondary py-1 my-1 mr-2">Edit</a>
+                            <a sec:authorize="isAuthenticated()" th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete</a>
                         </p>
                     </div>
                 </div>
             </div>
-<!--            <span th:text="${book.title}">Title</span>-->
-<!--            <span th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></span>-->
-<!--            <hr class="mt-3">-->
         </div>
     </p>
+
+    <script>
+        function deleteBook(id) {
+            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch("/admin/book/" + id, {
+                method: "DELETE",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    [header]: token
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("Something went wrong!")
+                }
+            });
+        }
+
+    </script>
 </section>
 
 </body>

@@ -51,6 +51,14 @@ public class BookService {
             logger.info("Failed ISBN validation");
             valid = false;
         }
+        if (book.getSeries() != null && !book.getSeries().isBlank() && !validateSeries(book.getSeries())) {
+            logger.info("Failed series validation");
+            valid = false;
+        }
+        if (book.getNote() != null && !book.getNote().isBlank() && !validateNote(book.getNote())) {
+            logger.info("Failed note validation");
+            valid = false;
+        }
         if (book.getAuthors() == null || book.getAuthors().isEmpty()) {
             logger.info("Failed authors validation");
             valid = false;
@@ -69,6 +77,14 @@ public class BookService {
 
     public boolean validatePublisher(String publisher) {
         return !publisher.isBlank() && publisher.length() <= 30;
+    }
+
+    public boolean validateSeries(String series) {
+        return !series.isBlank() && series.length() <= 30;
+    }
+
+    public boolean validateNote(String note) {
+        return !note.isBlank() && note.length() <= 500;
     }
 
     public boolean validatePubYear(String pubYear) {
@@ -109,6 +125,10 @@ public class BookService {
 
     public List<Book> findBookByGenreAndCategory(Genre genre, Category category) {
         return bookRepository.findByGenreAndCategoryOrderByAddedDesc(genre, category);
+    }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 
 }

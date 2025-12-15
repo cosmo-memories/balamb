@@ -13,6 +13,8 @@ public class Book extends Item {
     private String isbn;
     private Genre genre;
     private Category category;
+    private String note;
+    private String series;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -69,4 +71,19 @@ public class Book extends Item {
         this.authors = authors;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
+    }
 }

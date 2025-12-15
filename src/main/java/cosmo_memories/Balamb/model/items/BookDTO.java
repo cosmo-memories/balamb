@@ -20,7 +20,7 @@ public class BookDTO {
     @Size(min=1, max=30, message = "Title must be between 1 and 30 characters.")
     private String title;
 
-    @Size(max=30)
+    @Size(max=30, message = "Publisher cannot be more than 30 characters.")
     private String publisher;
 
     @YearRange
@@ -34,6 +34,12 @@ public class BookDTO {
 
     private Genre genre;
     private Category category;
+
+    @Size(max=500, message = "Note cannot be more than 500 characters.")
+    private String note;
+
+    @Size(max=30, message = "Series cannot be more than 30 characters.")
+    private String series;
 
     @NotNull(message = "At least one author is required.")
     @Size(min = 1, message = "At least one author is required.")
@@ -57,6 +63,12 @@ public class BookDTO {
         }
         if (this.isbn != null && !isbn.isBlank()) {
             book.setIsbn(isbn);
+        }
+        if (note != null && !note.isBlank()) {
+            book.setNote(note);
+        }
+        if (series != null && !series.isBlank()) {
+            book.setSeries(series);
         }
         book.setGenre(genre);
         book.setCategory(category);
@@ -124,5 +136,21 @@ public class BookDTO {
 
     public void setAuthors(List<String> authors) {
         this.authors = authors;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
     }
 }

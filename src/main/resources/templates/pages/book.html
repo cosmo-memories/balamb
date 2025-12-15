@@ -24,6 +24,9 @@
                     <div class="card-body bg-dark" style="height: 100%">
                         <h5 class="card-title text-white" th:text="${book.title}"></h5>
                         <p class="card-text text-secondary">
+                            <span th:text="${book.series}"></span>
+                        </p>
+                        <p class="card-text text-secondary">
                             by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
                         </p>
                         <p class="card-text">
@@ -49,8 +52,13 @@
             </div>
         </div>
     </p>
+    <hr class="mt-0">
+    <p class="card-text text-secondary">
+        <span th:text="${book.note}"></span>
+    </p>
+    <hr class="mt-0">
     <p sec:authorize="isAuthenticated()">
-        Admin controls here.
+        Admin controls here (WIP)
         <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
             <div class="form-group">
                 <input type="file" name="uploadedFile" accept="image/*" class="form-control-file">
