@@ -8,11 +8,8 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Integer.parseInt;
 
 public class BookDTO {
 
@@ -47,40 +44,6 @@ public class BookDTO {
     private List<@Pattern(regexp = ".+,\\s*.+", message = "Names must be in the form 'Lastname, Firstname'.") String> authors = new ArrayList<>();
 
     public BookDTO() {}
-
-    public Book mapToBook() {
-        Book book = new Book();
-        book.setTitle(title);
-        if (publisher != null && !publisher.isBlank()) {
-            book.setPublisher(publisher);
-        }
-        if (pubYear != null && !pubYear.isBlank()) {
-            try {
-                book.setPubYear(Year.of(Integer.parseInt(pubYear)));
-            } catch (NumberFormatException e) {
-                book.setPubYear(null);
-            }
-        }
-        if (this.isbn != null && !isbn.isBlank()) {
-            book.setIsbn(isbn);
-        }
-        if (note != null && !note.isBlank()) {
-            book.setNote(note);
-        }
-        if (series != null && !series.isBlank()) {
-            book.setSeries(series);
-        }
-        book.setGenre(genre);
-        book.setCategory(category);
-        if (authors != null && !authors.isEmpty()) {
-            for (String author : authors) {
-                String[] names = author.split(",");
-                book.addAuthor(new Author(names[1].trim(), names[0].trim()));
-            }
-        }
-        book.setAdded(LocalDateTime.now());
-        return book;
-    }
 
     public String getTitle() {
         return title;

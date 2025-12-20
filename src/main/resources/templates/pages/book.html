@@ -57,7 +57,7 @@
         <span th:text="${book.note}"></span>
     </p>
     <hr class="mt-0">
-    <p sec:authorize="isAuthenticated()">
+    <div sec:authorize="isAuthenticated()">
         Admin controls here (WIP)
         <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
             <div class="form-group">
@@ -66,7 +66,7 @@
 <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
             <button type="submit" class="btn btn-primary">Upload image</button>
         </form>
-    </p>
+    </div>
 </section>
 
 </body>

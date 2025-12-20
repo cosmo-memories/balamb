@@ -1,10 +1,17 @@
 package cosmo_memories.Balamb.service.books;
 
 import cosmo_memories.Balamb.model.items.Author;
+import cosmo_memories.Balamb.repository.books.AuthorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthorService {
+
+    @Autowired
+    AuthorRepository authorRepository;
 
     public AuthorService() {}
 
@@ -19,6 +26,10 @@ public class AuthorService {
             }
         }
         return valid;
+    }
+
+    public Optional<Author> findByFullName(String firstName, String lastName) {
+        return authorRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
 }

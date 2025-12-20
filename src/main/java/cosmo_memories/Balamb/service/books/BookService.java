@@ -2,6 +2,7 @@ package cosmo_memories.Balamb.service.books;
 
 import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
+import cosmo_memories.Balamb.model.items.Author;
 import cosmo_memories.Balamb.model.items.Book;
 import cosmo_memories.Balamb.model.items.BookDTO;
 import cosmo_memories.Balamb.repository.books.BookRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -29,8 +31,47 @@ public class BookService {
     @Autowired
     BookRepository bookRepository;
 
-    public Book save(BookDTO bookDto) {
-        return bookRepository.save(bookDto.mapToBook());
+    public Book saveNewBook(BookDTO bookDto) {
+        return bookRepository.save(mapDtoToBook(bookDto));
+    }
+
+    public Book mapDtoToBook(BookDTO dto) {
+        Book book = new Book();
+        book.setTitle(dto.getTitle());
+        if (dto.getPublisher() != null && !dto.getPublisher().isBlank()) {
+            book.setPublisher(dto.getPublisher());
+        }
+        if (dto.getPubYear() != null && !dto.getPubYear().isBlank()) {
+            try {
+                book.setPubYear(Year.of(Integer.parseInt(dto.getPubYear())));
+            } catch (NumberFormatException e) {
+                book.setPubYear(null);
+            }
+        }
+        if (dto.getIsbn() != null && !dto.getIsbn().isBlank()) {
+            book.setIsbn(dto.getIsbn());
+        }
+        if (dto.getNote() != null && !dto.getNote().isBlank()) {
+            book.setNote(dto.getNote());
+        }
+        if (dto.getSeries() != null && !dto.getSeries().isBlank()) {
+            book.setSeries(dto.getSeries());
+        }
+        book.setGenre(dto.getGenre());
+        book.setCategory(dto.getCategory());
+        if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
+            for (String author : dto.getAuthors()) {
+                String[] names = author.split(",");
+                Optional<Author> existingAuthor = authorService.findByFullName(names[1].trim(), names[0].trim());
+                if (existingAuthor.isPresent()) {
+                    book.addAuthor(existingAuthor.get());
+                } else {
+                    book.addAuthor(new Author(names[1].trim(), names[0].trim()));
+                }
+            }
+        }
+        book.setAdded(LocalDateTime.now());
+        return book;
     }
 
     public boolean validateBook(BookDTO book) {
