@@ -36,6 +36,14 @@ public class Author {
         books.add(book);
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public String getCommaSeparatedFullName() {
+        return lastName + ", " + firstName;
+    }
+
 
     public long getId() {
         return id;

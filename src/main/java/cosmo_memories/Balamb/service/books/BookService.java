@@ -9,14 +9,15 @@ import cosmo_memories.Balamb.repository.books.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -30,6 +31,36 @@ public class BookService {
 
     @Autowired
     BookRepository bookRepository;
+
+    public Book updateBook(long id, BookDTO bookDto) {
+        Book newBook = mapDtoToBook(bookDto);
+        Book currentBook = bookRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Book not found"));
+        if (!Objects.equals(currentBook.getTitle(), newBook.getTitle())) {
+            currentBook.setTitle(newBook.getTitle());
+        }
+        if (!Objects.equals(currentBook.getAuthors(), newBook.getAuthors())) {
+            currentBook.setAuthors(newBook.getAuthors());
+        }
+        if (!Objects.equals(currentBook.getPublisher(), newBook.getPublisher())) {
+            currentBook.setPublisher(newBook.getPublisher());
+        }
+        if (!Objects.equals(currentBook.getIsbn(), newBook.getIsbn())) {
+            currentBook.setIsbn(newBook.getIsbn());
+        }
+        if (!Objects.equals(currentBook.getNote(), newBook.getNote())) {
+            currentBook.setNote(newBook.getNote());
+        }
+        if (!Objects.equals(currentBook.getSeries(), newBook.getSeries())) {
+            currentBook.setSeries(newBook.getSeries());
+        }
+        if (!Objects.equals(currentBook.getCategory(), newBook.getCategory())) {
+            currentBook.setCategory(newBook.getCategory());
+        }
+        if (!Objects.equals(currentBook.getPubYear(), newBook.getPubYear())) {
+            currentBook.setPubYear(newBook.getPubYear());
+        }
+        return saveBook(currentBook);
+    }
 
     public Book saveNewBook(BookDTO bookDto) {
         return bookRepository.save(mapDtoToBook(bookDto));
@@ -72,6 +103,28 @@ public class BookService {
         }
         book.setAdded(LocalDateTime.now());
         return book;
+    }
+
+    public BookDTO mapBookToDto(Book book) {
+        BookDTO dto = new BookDTO();
+        dto.setTitle(book.getTitle());
+        dto.setPublisher(book.getPublisher());
+        if (book.getPubYear() == null) {
+            dto.setPubYear(null);
+        } else {
+            dto.setPubYear(book.getPubYear().toString());
+        }
+        dto.setIsbn(book.getIsbn());
+        dto.setGenre(book.getGenre());
+        dto.setCategory(book.getCategory());
+        dto.setNote(book.getNote());
+        dto.setSeries(book.getSeries());
+        List<String> authors = new ArrayList<String>();
+        for (Author author : book.getAuthors()) {
+            authors.add(author.getCommaSeparatedFullName());
+        }
+        dto.setAuthors(authors);
+        return dto;
     }
 
     public boolean validateBook(BookDTO book) {

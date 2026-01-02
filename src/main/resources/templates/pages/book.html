@@ -4,6 +4,21 @@
       layout:decorate="~{layouts/default}">
 <head>
     <title>Book</title>
+
+    <style>
+        #pubYear::-webkit-inner-spin-button,
+        #pubYear::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;
+        }
+
+        #pubYear {
+            appearance: textfield !important;
+        }
+
+        input:invalid {
+            border: 2px red;
+        }
+    </style>
 </head>
 <body>
 
@@ -66,7 +81,158 @@
 <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
             <button type="submit" class="btn btn-primary">Upload image</button>
         </form>
+
+        <hr class="mt-0">
+        Edit book:
+        <form action="#" th:action="@{/admin/edit/{id}(id=${book.id})}" th:object="${bookDto}" method="post">
+            <div class="container my-2">
+                <div class="row">
+                    <div class="col">
+                        <label for="title">Title</label> <span class="text-danger">(Required)</span>
+                        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></span>
+                        <input id="title" type="text" class="form-control" th:field="*{title}" placeholder="Title"
+                               required minlength="1" maxlength="30" />
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <label for="authors-container">Author(s)</label> <span class="text-danger">(Required)</span>
+                        <span th:if="${#fields.hasErrors('authors[0]')}" th:errors="*{authors[0]}" class="text-danger"></span>
+                        <div id="authors-container">
+                            <div class="author-field"
+                                 th:each="author, iterStat : *{authors}">
+                                <input type="text"
+                                       class="form-control mt-2"
+                                       th:field="*{authors[__${iterStat.index}__]}"
+                                       placeholder="Lastname, Firstname"
+                                       required
+                                       pattern=".+,\s*.+" />
+                                <button type="button"
+                                        class="btn btn-dark mt-2 remove-author-btn"
+                                        th:if="${iterStat.index > 0}">
+                                    Remove Author
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col d-flex align-items-end">
+                        <button type="button" id="add-author-btn" class="btn btn-secondary">Add Author</button>
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <label for="publisher">Publisher</label>
+                        <span th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}" class="text-danger"></span>
+                        <input id="publisher" type="text" th:field="*{publisher}" placeholder="Publisher" class="form-control"
+                               maxlength="30" />
+                    </div>
+                    <div class="col">
+                        <label for="isbn">ISBN</label>
+                        <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="text-danger"></span>
+                        <input id="isbn" type="text" th:field="*{isbn}" placeholder="ISBN" class="form-control"
+                               pattern="^$|^(?:[0-9A-Za-z]-?){10}$|^(?:[0-9A-Za-z]-?){13}$" />
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <label for="series">Series</label>
+                        <span th:if="${#fields.hasErrors('series')}" th:errors="*{series}" class="text-danger"></span>
+                        <input id="series" type="text" th:field="*{series}" placeholder="Series" class="form-control"
+                               maxlength="30" />
+                    </div>
+                    <div class="col">
+                        <label for="note">Library Notes</label>
+                        <span th:if="${#fields.hasErrors('note')}" th:errors="*{note}" class="text-danger"></span>
+                        <input id="note" type="text" th:field="*{note}" placeholder="Notes" class="form-control"
+                               maxlength="500" />
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <label for="pubYear">Publication Year</label>
+                        <span th:if="${#fields.hasErrors('pubYear')}" th:errors="*{pubYear}" class="text-danger"></span>
+                        <input id="pubYear" type="number" th:field="*{pubYear}" placeholder="Publication Year" class="form-control"
+                               min="0" />
+                    </div>
+                    <div class="col">
+                        <label for="genre">Genre</label>
+                        <select id="genre" th:field="*{genre}" class="form-select">
+                            <option th:each="genre: ${genres}" th:text="${genre.getLabel()}" th:value="${genre}">Genre</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></span>
+                    </div>
+                    <div class="col">
+                        <label for="category">Category</label>
+                        <select id="category" th:field="*{category}" class="form-select">
+                            <option th:each="category: ${categories}" th:text="${category.getLabel()}" th:value="${category}">Category</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <div class="col d-flex justify-content-center">
+                        <input type="submit" value="Submit" class="btn btn-secondary mr-2" />
+                        <input type="reset" value="Reset" class="btn btn-dark" />
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('authors-container');
+            const addBtn = document.getElementById('add-author-btn');
+
+            addBtn.addEventListener('click', function() {
+                const index = container.querySelectorAll('.author-field').length;
+                const div = document.createElement('div');
+                div.className = 'author-field';
+                div.innerHTML = `
+                    <input type="text"
+                           class="form-control mt-2"
+                           name="authors[${index}]"
+                           placeholder="Lastname, Firstname"
+                           required
+                           pattern=".+,\\s*.+" />
+                    <button type="button" class="btn btn-dark mt-2 remove-author-btn">
+                        Remove Author
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-author-btn')) {
+                    e.preventDefault();
+                    e.target.parentElement.remove();
+
+                    container.querySelectorAll('.author-field input').forEach((input, i) => {
+                        input.setAttribute('name', `authors[${i}]`);
+                    });
+                }
+            });
+        });
+
+        const pubYear = document.getElementById('pubYear');
+        const currentYear = new Date().getFullYear();
+        pubYear.addEventListener("input", (event) => {
+            pubYear.setCustomValidity("");
+            if (!pubYear.validity.valid) {
+                return;
+            }
+            if (pubYear.value > currentYear) {
+                pubYear.setCustomValidity("Year must not be in the future.");
+            }
+        });
+    </script>
 </section>
 
 </body>

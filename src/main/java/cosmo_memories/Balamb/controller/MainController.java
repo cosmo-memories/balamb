@@ -4,6 +4,7 @@ import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
 import cosmo_memories.Balamb.model.enums.UpdateType;
 import cosmo_memories.Balamb.model.items.Book;
+import cosmo_memories.Balamb.model.items.BookDTO;
 import cosmo_memories.Balamb.model.site.Update;
 import cosmo_memories.Balamb.service.books.BookService;
 import cosmo_memories.Balamb.service.site.UpdateService;
@@ -81,6 +82,9 @@ public class MainController {
         }
         model.addAttribute("activePage", "browse");
         model.addAttribute("book", book.get());
+        model.addAttribute("bookDto", bookService.mapBookToDto(book.get()));
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("genres", Genre.values());
         return "pages/book";
     }
 

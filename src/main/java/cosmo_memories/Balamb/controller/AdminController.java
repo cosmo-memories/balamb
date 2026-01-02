@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 public class AdminController {
@@ -156,6 +157,24 @@ public class AdminController {
             model.addAttribute("book", book);
             return "pages/book";
         }
+        return "redirect:/browse/" + id;
+    }
+
+    @PostMapping("/admin/edit/{id}")
+    public String editBook(Model model, @PathVariable long id, @Valid @ModelAttribute("bookDto") BookDTO bookDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.info("Failed to edit book. Form fields invalid.");
+            model.addAttribute("activePage", "browse");
+            model.addAttribute("book", bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found")));
+            model.addAttribute("bookDto", bookDto);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("genres", Genre.values());
+            return "pages/book";
+        }
+        if (bookService.validateBook(bookDto)) {
+            bookService.updateBook(id, bookDto);
+        }
+        logger.info("Book edited.");
         return "redirect:/browse/" + id;
     }
 
