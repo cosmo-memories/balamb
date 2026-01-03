@@ -15,24 +15,27 @@
     </div>
     <hr class="mt-0">
         <div class="container my-4">
-            <form action="#" th:action="@{/browse}" method="get">
+            <form action="#" th:action="@{/browse}" method="get" id="filterForm">
                 <div class="row">
                     <div class="col d-flex align-items-center justify-content-end">
                         <span>Filter search results:</span>
                     </div>
                     <div class="col">
-                        <select id="genre" name="genre" class="form-select" onchange="this.form.submit()">
+                        <select id="genre" name="genre" class="form-select">
                             <option value="" disabled th:selected="${genre == null}">Genre</option>
-                            <option th:each="newGenre: ${genres}" th:text="${newGenre.getLabel()}" th:value="${newGenre}" th:selected="${newGenre == genre}">Genre</option>
+                            <option th:each="newGenre: ${genres}" th:text="${newGenre.getLabel()}"
+                                    th:value="${newGenre}" th:selected="${newGenre == genre}">Genre</option>
                         </select>
                     </div>
                     <div class="col">
-                        <select id="category" name="category" class="form-select" onchange="this.form.submit()">
+                        <select id="category" name="category" class="form-select">
                             <option value="" disabled th:selected="${category == null}">Category</option>
-                            <option th:each="newCategory: ${categories}" th:text="${newCategory.getLabel()}" th:value="${newCategory}" th:selected="${newCategory == category}">Categories</option>
+                            <option th:each="newCategory: ${categories}" th:text="${newCategory.getLabel()}"
+                                    th:value="${newCategory}" th:selected="${newCategory == category}">Categories</option>
                         </select>
                     </div>
                     <div class="col">
+                        <button type="submit" class="btn btn-primary mr-3">Apply Filters</button>
                         <a href="/browse" class="btn btn-secondary">Reset Filters</a>
                     </div>
                 </div>
@@ -86,6 +89,31 @@
             </div>
         </div>
     </p>
+
+    <!--  Reference: https://stackoverflow.com/questions/18490820/spring-thymeleaf-how-to-implement-pagination-for-a-list  -->
+    <div class="table-pagination">
+        <ul class="pagination justify-content-center">
+            <li th:class="${bookList.number eq 0} ? 'disabled' : ''">
+                <a th:if="${not bookList.first}" th:href="'/browse?pageNo=' + ${bookList.number - 1}
+                        + (${#strings.isEmpty(genre)} ? '' : '&genre=' + ${genre})
+                        + (${#strings.isEmpty(category)} ? '' : '&category=' + ${category})">
+                    Previous
+                </a>
+                <a th:if="${bookList.first}">Previous</a>
+            </li>
+            <li class="mx-2">
+                |
+            </li>
+            <li th:class="${bookList.number + 1 ge bookList.totalPages} ? 'disabled' : ''">
+                <a th:if="${not bookList.last}" th:href="'/browse?pageNo=' + ${bookList.number + 1}
+                        + (${#strings.isEmpty(genre)} ? '' : '&genre=' + ${genre})
+                        + (${#strings.isEmpty(category)} ? '' : '&category=' + ${category})">
+                    Next
+                </a>
+                <a th:if="${bookList.last}">Next</a>
+            </li>
+        </ul>
+    </div>
 
     <script>
         function deleteBook(id) {

@@ -9,9 +9,9 @@ import cosmo_memories.Balamb.repository.books.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -201,6 +201,10 @@ public class BookService {
         return bookRepository.findAll(Sort.by(Sort.Direction.DESC, "added"));
     }
 
+    public Page<Book> findAllBooksOnPage(int pageNo) {
+        return bookRepository.findAll(PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
+    }
+
     public Optional<Book> findBookById(Long id) {
         return bookRepository.findById(id);
     }
@@ -209,16 +213,16 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public List<Book> findBookByGenre(Genre genre) {
-        return bookRepository.findByGenreOrderByAddedDesc(genre);
+    public Page<Book> findBookByGenre(Genre genre, int pageNo) {
+        return bookRepository.findByGenreOrderByAddedDesc(genre, PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
     }
 
-    public List<Book> findBookByCategory(Category category) {
-        return bookRepository.findByCategoryOrderByAddedDesc(category);
+    public Page<Book> findBookByCategory(Category category, int pageNo) {
+        return bookRepository.findByCategoryOrderByAddedDesc(category, PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
     }
 
-    public List<Book> findBookByGenreAndCategory(Genre genre, Category category) {
-        return bookRepository.findByGenreAndCategoryOrderByAddedDesc(genre, category);
+    public Page<Book> findBookByGenreAndCategory(Genre genre, Category category, int pageNo) {
+        return bookRepository.findByGenreAndCategoryOrderByAddedDesc(genre, category, PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
     }
 
     public void deleteBook(Long id) {
