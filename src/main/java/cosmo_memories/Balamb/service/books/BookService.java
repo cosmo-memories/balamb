@@ -25,6 +25,7 @@ import static java.lang.Integer.parseInt;
 public class BookService {
 
     private static final Logger logger = LoggerFactory.getLogger(BookService.class);
+    private final int pageSize = 15;
 
     @Autowired
     AuthorService authorService;
@@ -52,6 +53,9 @@ public class BookService {
         }
         if (!Objects.equals(currentBook.getSeries(), newBook.getSeries())) {
             currentBook.setSeries(newBook.getSeries());
+        }
+        if (!Objects.equals(currentBook.getGenre(), newBook.getGenre())) {
+            currentBook.setGenre(newBook.getGenre());
         }
         if (!Objects.equals(currentBook.getCategory(), newBook.getCategory())) {
             currentBook.setCategory(newBook.getCategory());
@@ -166,7 +170,7 @@ public class BookService {
     }
 
     public boolean validateTitle(String title) {
-        return !title.isBlank() && title.length() <= 30;
+        return !title.isBlank() && title.length() <= 60;
     }
 
     public boolean validatePublisher(String publisher) {
@@ -202,7 +206,7 @@ public class BookService {
     }
 
     public Page<Book> findAllBooksOnPage(int pageNo) {
-        return bookRepository.findAll(PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
+        return bookRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
     public Optional<Book> findBookById(Long id) {
@@ -214,15 +218,15 @@ public class BookService {
     }
 
     public Page<Book> findBookByGenre(Genre genre, int pageNo) {
-        return bookRepository.findByGenreOrderByAddedDesc(genre, PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
+        return bookRepository.findByGenreOrderByAddedDesc(genre, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
     public Page<Book> findBookByCategory(Category category, int pageNo) {
-        return bookRepository.findByCategoryOrderByAddedDesc(category, PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
+        return bookRepository.findByCategoryOrderByAddedDesc(category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
     public Page<Book> findBookByGenreAndCategory(Genre genre, Category category, int pageNo) {
-        return bookRepository.findByGenreAndCategoryOrderByAddedDesc(genre, category, PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "added")));
+        return bookRepository.findByGenreAndCategoryOrderByAddedDesc(genre, category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
     public void deleteBook(Long id) {

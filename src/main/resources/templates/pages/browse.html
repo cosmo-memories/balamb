@@ -16,79 +16,115 @@
     <hr class="mt-0">
         <div class="container my-4">
             <form action="#" th:action="@{/browse}" method="get" id="filterForm">
-                <div class="row">
-                    <div class="col d-flex align-items-center justify-content-end">
+                <div class="row g-4 flex-wrap align-items-center">
+                    <div class="col-auto d-flex align-items-center justify-content-end">
                         <span>Filter search results:</span>
                     </div>
-                    <div class="col">
+                    <div class="col-auto col-lg">
                         <select id="genre" name="genre" class="form-select">
                             <option value="" disabled th:selected="${genre == null}">Genre</option>
                             <option th:each="newGenre: ${genres}" th:text="${newGenre.getLabel()}"
                                     th:value="${newGenre}" th:selected="${newGenre == genre}">Genre</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-auto col-lg">
                         <select id="category" name="category" class="form-select">
                             <option value="" disabled th:selected="${category == null}">Category</option>
                             <option th:each="newCategory: ${categories}" th:text="${newCategory.getLabel()}"
                                     th:value="${newCategory}" th:selected="${newCategory == category}">Categories</option>
                         </select>
                     </div>
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary mr-3">Apply Filters</button>
+                    <div class="col-auto d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
                         <a href="/browse" class="btn btn-secondary">Reset Filters</a>
                     </div>
                 </div>
             </form>
         </div>
     <hr class="mt-0">
-    <p>
-        <div th:if="${bookList.empty}">
-            No books to show :(
-        </div>
+    <div th:if="${bookList.empty}">
+        No books to show :(
+    </div>
 
-        <div class="card mb-3" th:each="book: ${bookList}">
-            <div class="row g-0">
-                <div class="col-md-1">
-                    <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." style="max-width: 100%;">
-                </div>
-                <div class="col-md-9">
-                    <div class="card-body bg-dark">
-                        <a th:href="@{/browse/{id}(id=${book.id})}">
-                            <h5 class="card-title text-white" th:text="${book.title}"></h5>
-                        </a>
-                        <p class="card-text text-secondary">
-                            <span th:text="${book.series}"></span>
-                        </p>
-                        <p class="card-text text-secondary">
-                            by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
-                        </p>
-                        <p class="card-text">
-                            <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
-                            <b class="mx-1">•</b>
-                            <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
-                        </p>
+    <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-4">
+        <div class="col d-flex" th:each="book: ${bookList}">
+            <div class="card h-100 flex-fill border-2 border-white bg-dark text-white">
+                <div class="row g-0 h-100">
+                    <div class="col-4 col-md-3 bg-light border-end border-1">
+                        <img th:src="@{~/uploads/images/{path}(path=${book.image})}"
+                             alt="Image goes here." class="object-fit-cover w-100 h-100">
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card-body bg-dark justify-content-end" style="height: 100%">
-                        <p class="card-text">
-                            <b>
-                                <span th:text="${book.publisher}" class="text-secondary"></span>
-                                <span th:text="${book.pubYear}" class="text-secondary"></span>
-                            </b>
-                            <br />
-                            <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>
-                            <span th:text="${book.isbn}" class="text-secondary"></span>
-                            <br />
-                            <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-secondary py-1 my-1 mr-2">Edit</a>
-                            <a sec:authorize="isAuthenticated()" th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete</a>
-                        </p>
+                    <div class="col d-flex flex-column">
+                        <div class="card-body d-flex flex-column">
+                            <a th:href="@{/browse/{id}(id=${book.id})}">
+                                <h5 class="card-title text-white" th:text="${book.title}"></h5>
+                            </a>
+                            <p class="card-text text-secondary">
+                                <span th:text="${book.series}"></span>
+                                &nbsp;
+                            </p>
+                            <p class="card-text text-secondary">
+                                by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
+                            </p>
+                            <p class="card-text mt-auto">
+                                <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
+                                <b class="mx-1">•</b>
+                                <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </p>
+    </div>
+
+
+
+    <!--    <div class="container">-->
+<!--        <div class="row row-cols-1 row-cols-md-3 g-4">-->
+<!--    <div class="card mb-3 d-flex border-2 border-white" th:each="book: ${bookList}" style="min-height: 180px;">-->
+<!--        <div class="row g-0 flex-fill bg-dark text-white">-->
+<!--            <div class="col-xxl-1 col-lg-3 bg-light border-end border-1" style="max-height: 200px;">-->
+<!--                <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." class="object-fit-cover w-100 h-100">-->
+<!--            </div>-->
+<!--            <div class="col">-->
+<!--                <div class="card-body bg-dark h-100">-->
+<!--                    <a th:href="@{/browse/{id}(id=${book.id})}">-->
+<!--                        <h5 class="card-title text-white" th:text="${book.title}"></h5>-->
+<!--                    </a>-->
+<!--                    <p class="card-text text-secondary">-->
+<!--                        <span th:text="${book.series}"></span>-->
+<!--                    </p>-->
+<!--                    <p class="card-text text-secondary">-->
+<!--                        by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>-->
+<!--                    </p>-->
+<!--                    <p class="card-text">-->
+<!--                        <b th:text="${book.category.getLabel()}" class="text-secondary"></b>-->
+<!--                        <b class="mx-1">•</b>-->
+<!--                        <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--&lt;!&ndash;            <div class="col-xxl-2 col-xl-3 col-md-5">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="card-body bg-dark justify-content-end" style="height: 100%">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="card-text d-flex gap-2 justify-content-end">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <b>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span th:text="${book.publisher}" class="text-secondary"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span th:text="${book.pubYear}" class="text-secondary"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </b>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <br />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span th:text="${book.isbn}" class="text-secondary"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <br />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-secondary py-1 my-1 mr-2">Edit</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <a sec:authorize="isAuthenticated()" th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <!--  Reference: https://stackoverflow.com/questions/18490820/spring-thymeleaf-how-to-implement-pagination-for-a-list  -->
     <div class="table-pagination">

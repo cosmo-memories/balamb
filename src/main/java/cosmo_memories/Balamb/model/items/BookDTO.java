@@ -6,15 +6,13 @@ import cosmo_memories.Balamb.utils.YearRange;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookDTO {
 
     @NotBlank(message = "Title cannot be blank.")
-    @Size(min=1, max=30, message = "Title must be between 1 and 30 characters.")
+    @Size(min=1, max=60, message = "Title must be between 1 and 60 characters.")
     private String title;
 
     @Size(max=30, message = "Publisher cannot be more than 30 characters.")

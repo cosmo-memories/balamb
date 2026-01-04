@@ -25,55 +25,64 @@
 <section layout:fragment="content">
     <div class="row d-flex justify-content-between">
         <div class="col-auto">
-            <h1 class="text-primary">Book</h1>
+            <h1 class="text-primary">Browse Records</h1>
         </div>
     </div>
     <hr class="mt-0">
     <p>
-        <div class="card mb-3">
+        <div class="card mb-3 bg-dark border-0">
             <div class="row g-0">
-                <div class="col-md-2">
-                    <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." style="max-width: 100%;">
+                <div class="col-lg-2">
+                    <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." class="object-fit-cover w-100 h-100 border border-white border-2">
                 </div>
-                <div class="col-md-8">
+                <div class="col-lg-10">
                     <div class="card-body bg-dark" style="height: 100%">
-                        <h5 class="card-title text-white" th:text="${book.title}"></h5>
+                        <h5 class="card-title h2 text-white" th:text="${book.title}"></h5>
                         <p class="card-text text-secondary">
-                            <span th:text="${book.series}"></span>
+                            <b>Series: <span th:text="${book.series}"></span></b>
                         </p>
                         <p class="card-text text-secondary">
-                            by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
-                        </p>
-                        <p class="card-text">
-                            <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
-                            <b class="mx-1">•</b>
-                            <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card-body bg-dark justify-content-end" style="height: 100%">
-                        <p class="card-text">
                             <b>
-                                <span th:text="${book.publisher}" class="text-secondary"></span>
-                                <span th:text="${book.pubYear}" class="text-secondary"></span>
+                                Author(s):
+                                <span th:each="author, iterStat: ${book.authors}">
+                                    <b th:text="${author.firstName} + ' ' + ${author.lastName}"></b><span class="text-secondary" th:if="${iterStat.index != book.authors.size() - 1}">, </span>
+                                </span>
                             </b>
-                            <br />
-                            <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>
-                            <span th:text="${book.isbn}" class="text-secondary"></span>
+                        </p>
+                        <hr class="mt-0" style="width: 50%">
+                        <p class="card-text text-secondary">
+                            Genre: <span th:text="${book.genre.getLabel()}"></span>
+                        </p>
+                        <p class="card-text text-secondary">
+                            Category: <span th:text="${book.category.getLabel()}"></span>
+                        </p>
+                        <p class="card-text text-secondary">
+                            Publisher: <span th:text="${book.publisher}"></span>
+                        </p>
+                        <p class="card-text text-secondary">
+                            Publication Year: <span th:text="${book.pubYear}"></span>
+                        </p>
+                        <p class="card-text text-secondary">
+                            ISBN: <span th:text="${book.isbn}"></span>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </p>
-    <hr class="mt-0">
-    <p class="card-text text-secondary">
-        <span th:text="${book.note}"></span>
-    </p>
-    <hr class="mt-0">
+    <div th:if="${book.note != null}">
+        <hr class="mt-0">
+        <p class="card-text">
+            <b>Library Notes:</b> <span th:text="${book.note}"></span>
+        </p>
+    </div>
+    <hr>
     <div sec:authorize="isAuthenticated()">
         Admin controls here (WIP)
+
+        <a sec:authorize="isAuthenticated()" th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete Book</a>
+
+        Upload cover:
         <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
             <div class="form-group">
                 <input type="file" name="uploadedFile" accept="image/*" class="form-control-file">
@@ -91,7 +100,7 @@
                         <label for="title">Title</label> <span class="text-danger">(Required)</span>
                         <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></span>
                         <input id="title" type="text" class="form-control" th:field="*{title}" placeholder="Title"
-                               required minlength="1" maxlength="30" />
+                               required minlength="1" maxlength="60" />
                     </div>
                 </div>
 
@@ -232,6 +241,25 @@
                 pubYear.setCustomValidity("Year must not be in the future.");
             }
         });
+
+        function deleteBook(id) {
+            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch("/admin/book/" + id, {
+                method: "DELETE",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    [header]: token
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("Something went wrong!")
+                }
+            });
+        }
     </script>
 </section>
 
