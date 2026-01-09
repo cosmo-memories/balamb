@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -201,8 +202,14 @@ public class BookService {
         return isbn.replace("-", "").length() >= 10 && isbn.replace("-", "").length() <= 13;
     }
 
-    public List<Book> findAllBooks() {
-        return bookRepository.findAll(Sort.by(Sort.Direction.DESC, "added"));
+    public Book findRandomBook() {
+        int rand = (int)(Math.random() * bookRepository.count());
+        Page<Book> book = bookRepository.findAll(PageRequest.of(rand, 1));
+        if (book.hasContent()) {
+            return book.getContent().getFirst();
+        } else {
+            return null;
+        }
     }
 
     public Page<Book> findAllBooksOnPage(int pageNo) {
@@ -231,6 +238,10 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    public List<Book> findNewestBooks(int numBooks) {
+        return bookRepository.findNewestBooks(PageRequest.of(0, numBooks));
     }
 
 }

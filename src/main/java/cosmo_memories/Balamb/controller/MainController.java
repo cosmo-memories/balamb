@@ -8,12 +8,14 @@ import cosmo_memories.Balamb.model.site.Update;
 import cosmo_memories.Balamb.service.books.BookService;
 import cosmo_memories.Balamb.service.site.UpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,14 @@ public class MainController {
 
     @GetMapping("/")
     public String getHome(Model model) {
+        int numBooks = 6;
         model.addAttribute("activePage", "home");
+        model.addAttribute("latestBooks", bookService.findNewestBooks(numBooks));
+        List<Book> randomBooks = new ArrayList<>();
+        for (int i=0; i < numBooks; i++) {
+            randomBooks.add(bookService.findRandomBook());
+        }
+        model.addAttribute("randomBooks", randomBooks);
         return "pages/home";
     }
 
