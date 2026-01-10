@@ -2,7 +2,8 @@ package cosmo_memories.Balamb.model.enums;
 
 public enum UpdateType {
     UPDATE("Update"),
-    TODO("TODO"),
+    TODO("To Do"),
+    ISSUE("Known Issue"),
     NEWS("News"),
     BUG("Bug");
 

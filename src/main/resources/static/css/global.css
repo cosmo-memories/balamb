@@ -14,3 +14,46 @@ h1, h2, h3, p, a, span, div {
 .text-primary {
     color: rgba(var(--bs-primary-rgb), 1) !important;
 }
+
+@media (min-width: 992px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0.75rem;
+        z-index: 1030;
+    }
+
+    main {
+        margin-left: calc(280px + 0.75rem);
+    }
+
+    .main-content {
+        margin-left: 280px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: relative;
+        left: 0rem;
+    }
+
+    main {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .content-wrapper {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    body.container-fluid {
+        padding-left: 0 !important;
+    }
+}

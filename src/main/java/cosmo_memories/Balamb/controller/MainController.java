@@ -8,6 +8,7 @@ import cosmo_memories.Balamb.model.site.Update;
 import cosmo_memories.Balamb.service.books.BookService;
 import cosmo_memories.Balamb.service.site.UpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,11 +75,11 @@ public class MainController {
     }
 
     @GetMapping("/updates")
-    public String getUpdates(Model model) {
+    public String getUpdates(Model model, @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo) {
         model.addAttribute("activePage", "updates");
         model.addAttribute("updateType", UpdateType.values());
         model.addAttribute("update", new Update());
-        List<Update> updates = updateService.findAllUpdates();
+        Page<Update> updates = updateService.findAllUpdates(pageNo, 10);
         model.addAttribute("updateList", updates);
         return "pages/updates";
     }

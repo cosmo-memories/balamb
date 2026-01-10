@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -94,7 +95,7 @@ public class AdminController {
             model.addAttribute("updateType", UpdateType.values());
             model.addAttribute("error", true);
             model.addAttribute("errorText", "Something went wrong posting your update.");
-            List<Update> updates = updateService.findAllUpdates();
+            Page<Update> updates = updateService.findAllUpdates(0, 10);
             model.addAttribute("updateList", updates);
             return "/pages/updates";
         } else {

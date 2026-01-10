@@ -10,11 +10,23 @@
 </head>
 <body class="container-fluid" style="padding-right: 0">
 
+<header class="d-lg-none sticky-top bg-dark text-white border-bottom">
+    <div class="d-flex align-items-center px-3 py-2">
+        <button class="btn btn-outline-light me-3"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mobileSidebar"
+                aria-controls="mobileSidebar">
+            ☰
+        </button>
+<!--        <span class="fw-semibold">Balamb Garden</span>-->
+    </div>
+</header>
+
 <div class="d-flex">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="flex-grow-1 ps-3 pe-3">
-        <div class="d-flex flex-column flex-shrink-0 text-white bg-dark p-3" style="min-height: 100vh; margin-left: 280px;">
+    <div class="flex-grow-1 ps-lg-3 pe-lg-3 ps-0 pe-0 content-wrapper">
+        <div class="d-flex flex-column flex-shrink-0 text-white bg-dark p-3 main-content" style="min-height: 100vh;">
             <div layout:fragment="content"></div>
         </div>
     </div>

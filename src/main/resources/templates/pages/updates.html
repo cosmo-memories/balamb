@@ -21,24 +21,49 @@
 
     <p th:if="${error}" th:text="${errorText}"></p>
 
-    <ul class="list-group list-group-flush">
-        <p th:if="${updateList.empty}">
-            No updates to show :(
-        </p>
-        <li class="list-group-item list-group-item-dark" th:each="post: ${updateList}">
-            <div class="d-flex w-100 justify-content-between">
-                <div class="d-flex">
-                    <h5 class="mb-1 text-black" th:text="${post.updateType.getLabel()}"></h5>
-                </div>
-                <div class="d-flex">
-                    <small class="text-black mx-2" th:text="${#temporals.format(post.created, 'dd-MM-yyyy')}"></small>
-                    <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-dark py-0 mx-2">Edit</a>
-                    <a sec:authorize="isAuthenticated()" th:onclick="'deleteUpdate(' + ${post.id} + ')'" class="btn btn-dark py-0">Delete</a>
+    <p th:if="${updateList.empty}">
+        No updates to show :(
+    </p>
+
+    <div class="row row-cols-1 g-4 mb-4">
+        <div class="col d-flex" th:each="post: ${updateList}">
+            <div class="card h-100 flex-fill border-2 border-white bg-dark text-white">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="d-flex">
+                            <h5 class="mb-1 text-white" th:text="${post.updateType.getLabel()}"></h5>
+                        </div>
+                        <div class="d-flex">
+                            <small class="text-white mx-2" th:text="${#temporals.format(post.created, 'dd-MM-yyyy')}"></small>
+                            <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-light text-black py-0 mx-2">Edit</a>
+                            <a sec:authorize="isAuthenticated()" th:onclick="'deleteUpdate(' + ${post.id} + ')'" class="btn btn-light text-black py-0">Delete</a>
+                        </div>
+                    </div>
+                    <small th:text="${post.description}" style="word-break: break-all;"></small>
                 </div>
             </div>
-            <small th:text="${post.description}" style="word-break: break-all;"></small>
-        </li>
-    </ul>
+        </div>
+    </div>
+
+    <div class="table-pagination">
+        <ul class="pagination justify-content-center">
+            <li th:class="${updateList.number eq 0} ? 'disabled' : ''">
+                <a th:if="${not updateList.first}" th:href="'/updates?pageNo=' + ${updateList.number - 1}">
+                    Previous
+                </a>
+                <a th:if="${updateList.first}">Previous</a>
+            </li>
+            <li class="mx-2">
+                |
+            </li>
+            <li th:class="${updateList.number + 1 ge updateList.totalPages} ? 'disabled' : ''">
+                <a th:if="${not updateList.last}" th:href="'/updates?pageNo=' + ${updateList.number + 1}">
+                    Next
+                </a>
+                <a th:if="${updateList.last}">Next</a>
+            </li>
+        </ul>
+    </div>
 
     <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
          data-bs-theme="dark" sec:authorize="isAuthenticated()">
@@ -84,7 +109,6 @@
                 }
             });
         }
-
     </script>
 </section>
 

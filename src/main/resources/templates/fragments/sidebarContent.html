@@ -1,0 +1,47 @@
+<div th:fragment="sidebarContent" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" class="d-flex flex-column h-100">
+
+    <!-- Top -->
+    <div>
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">Balamb 0.0.1</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="/" class="nav-link" th:classappend="${activePage == 'home'} ? ' active' : ''">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="/browse" class="nav-link" th:classappend="${activePage == 'browse'} ? ' active' : ''">Browse</a>
+            </li>
+            <li class="nav-item">
+                <a href="/about" class="nav-link" th:classappend="${activePage == 'about'} ? ' active' : ''">About</a>
+            </li>
+            <li class="nav-item">
+                <a href="/updates" class="nav-link" th:classappend="${activePage == 'updates'} ? ' active' : ''">Updates</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Bottom -->
+    <div class="mt-auto">
+        <hr>
+        <strong sec:authorize="isAnonymous()"><a href="/login" class="text-white">Admin Login</a></strong>
+        <div class="dropdown mt-2" sec:authorize="isAuthenticated()">
+            <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                <img th:src="@{/images/PlaceholderIcon.png}" width="32" height="32" class="rounded-circle me-2">
+                <strong th:text="${#authentication.principal.firstName} + ' ' + ${#authentication.principal.lastName}">User Name</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark shadow">
+                <li><a class="dropdown-item" href="/admin/add">Manage Books</a></li>
+                <li><a class="dropdown-item" href="/admin">Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                        Sign Out
+                    </a>
+                    <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
