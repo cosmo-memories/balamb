@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.util.Date;
 
 @MappedSuperclass
 public abstract class Item {
@@ -64,11 +63,7 @@ public abstract class Item {
 
     public void setAdded(LocalDateTime added) { this.added = added; }
 
-    public String getImage() {
-        return image;
-    }
+    public String getImage() { return image; }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
+    public void setImage(String image) { this.image = image; }
 }

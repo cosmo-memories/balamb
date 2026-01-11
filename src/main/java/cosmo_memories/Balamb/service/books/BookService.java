@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.Year;
@@ -67,7 +67,7 @@ public class BookService {
         return saveBook(currentBook);
     }
 
-    public Book saveNewBook(BookDTO bookDto) {
+    public Book saveBookFromDto(BookDTO bookDto) {
         return bookRepository.save(mapDtoToBook(bookDto));
     }
 
@@ -132,7 +132,7 @@ public class BookService {
         return dto;
     }
 
-    public boolean validateBook(BookDTO book) {
+    public boolean validateBookDto(BookDTO book) {
         boolean valid = true;
         if (!validateTitle(book.getTitle())) {
             logger.info("Failed title validation");
@@ -242,6 +242,21 @@ public class BookService {
 
     public List<Book> findNewestBooks(int numBooks) {
         return bookRepository.findNewestBooks(PageRequest.of(0, numBooks));
+    }
+
+    public String validateImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return "No file selected.";
+        }
+        if (file.getSize() > 10 * 1024 * 1024) {
+            return "File must be smaller than 10MB.";
+        }
+        String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
+        List<String> allowed = Arrays.asList("png", "jpg", "jpeg");
+        if (!allowed.contains(extension)) {
+            return "File type must be PNG or JPG.";
+        }
+        return "";
     }
 
 }

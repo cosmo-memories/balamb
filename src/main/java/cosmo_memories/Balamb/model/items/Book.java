@@ -25,19 +25,12 @@ public class Book extends Item {
 
     public Book() {}
 
-//    public Book(String isbn, Genre genre, Category category) {
-//        this.isbn = isbn;
-//        this.genre = genre;
-//        this.category = category;
-//    }
-
     public void addAuthor(Author author) {
         if (authors == null) {
             authors = new ArrayList<>();
         }
         authors.add(author);
     }
-
 
     public String getIsbn() {
         return isbn;

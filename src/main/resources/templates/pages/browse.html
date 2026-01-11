@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{layouts/default}">
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorate="~{layouts/default}">
 <head>
     <title>Browse</title>
 </head>
@@ -78,54 +76,6 @@
         </div>
     </div>
 
-
-
-    <!--    <div class="container">-->
-<!--        <div class="row row-cols-1 row-cols-md-3 g-4">-->
-<!--    <div class="card mb-3 d-flex border-2 border-white" th:each="book: ${bookList}" style="min-height: 180px;">-->
-<!--        <div class="row g-0 flex-fill bg-dark text-white">-->
-<!--            <div class="col-xxl-1 col-lg-3 bg-light border-end border-1" style="max-height: 200px;">-->
-<!--                <img th:src="@{~/uploads/images/{path}(path=${book.image})}" alt="Image goes here." class="object-fit-cover w-100 h-100">-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--                <div class="card-body bg-dark h-100">-->
-<!--                    <a th:href="@{/browse/{id}(id=${book.id})}">-->
-<!--                        <h5 class="card-title text-white" th:text="${book.title}"></h5>-->
-<!--                    </a>-->
-<!--                    <p class="card-text text-secondary">-->
-<!--                        <span th:text="${book.series}"></span>-->
-<!--                    </p>-->
-<!--                    <p class="card-text text-secondary">-->
-<!--                        by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>-->
-<!--                    </p>-->
-<!--                    <p class="card-text">-->
-<!--                        <b th:text="${book.category.getLabel()}" class="text-secondary"></b>-->
-<!--                        <b class="mx-1">•</b>-->
-<!--                        <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>-->
-<!--                    </p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--&lt;!&ndash;            <div class="col-xxl-2 col-xl-3 col-md-5">&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="card-body bg-dark justify-content-end" style="height: 100%">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="card-text d-flex gap-2 justify-content-end">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <b>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <span th:text="${book.publisher}" class="text-secondary"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <span th:text="${book.pubYear}" class="text-secondary"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </b>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <br />&ndash;&gt;-->
-<!--&lt;!&ndash;                        <b class="text-secondary" style="display: inline-block;" th:if="${book.isbn}">ISBN: </b>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <span th:text="${book.isbn}" class="text-secondary"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <br />&ndash;&gt;-->
-<!--&lt;!&ndash;                        <a sec:authorize="isAuthenticated()" th:onclick="" class="btn btn-secondary py-1 my-1 mr-2">Edit</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <a sec:authorize="isAuthenticated()" th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--        </div>-->
-<!--    </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <!--  Reference: https://stackoverflow.com/questions/18490820/spring-thymeleaf-how-to-implement-pagination-for-a-list  -->
     <div class="table-pagination">
         <ul class="pagination justify-content-center">
@@ -170,7 +120,6 @@
                 }
             });
         }
-
     </script>
 </section>
 

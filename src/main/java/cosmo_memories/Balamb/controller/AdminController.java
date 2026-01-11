@@ -28,9 +28,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Controller
 public class AdminController {
@@ -46,8 +45,6 @@ public class AdminController {
     @Autowired
     UserService userService;
 
-    public AdminController() {}
-
     @GetMapping("/admin")
     public String getAdmin(Model model) {
         model.addAttribute("activePage", "admin");
@@ -60,7 +57,7 @@ public class AdminController {
         return "pages/login";
     }
 
-    @GetMapping("/admin/add")
+    @GetMapping("/admin/add/book")
     public String getAddBook(Model model) {
         model.addAttribute("activePage", "add_book");
         model.addAttribute("bookDto", new BookDTO());
@@ -69,7 +66,7 @@ public class AdminController {
         return "pages/admin/add";
     }
 
-    @PostMapping("/admin/add/submit")
+    @PostMapping("/admin/add/book")
     public String submitBook(Model model, @Valid @ModelAttribute("bookDto") BookDTO bookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             logger.info("Failed to add book.");
@@ -79,11 +76,11 @@ public class AdminController {
             model.addAttribute("genres", Genre.values());
             return "pages/admin/add";
         }
-        if (bookService.validateBook(bookDto)) {
-            bookService.saveNewBook(bookDto);
+        if (bookService.validateBookDto(bookDto)) {
+            bookService.saveBookFromDto(bookDto);
         }
         logger.info("Book added.");
-        return "redirect:/admin/add";
+        return "redirect:/admin/add/book";
     }
 
     @PostMapping("/admin/update")
@@ -129,23 +126,14 @@ public class AdminController {
     @PostMapping("/admin/add/image/{id}")
     public String uploadImage(Model model, @PathVariable Long id, @RequestParam("uploadedFile") MultipartFile file) {
         Book book = bookService.findBookById(id).orElseThrow(() -> new IllegalArgumentException("Book does not exist"));
-        if (file.isEmpty()) {
-            model.addAttribute("uploadError", "No file selected.");
+        String error = bookService.validateImage(file);
+        if (error != null && !error.isEmpty()) {
+            model.addAttribute("uploadError", error);
             model.addAttribute("book", book);
             return "pages/book";
         }
-        if (file.getSize() > 10 * 1024 * 1024) {
-            model.addAttribute("uploadError", "File must be smaller than 10MB.");
-            model.addAttribute("book", book);
-            return "pages/book";
-        }
-        String extension = file.getContentType().split("/")[1];
-        List<String> allowed = Arrays.asList("png", "jpg", "jpeg");
-        if (!allowed.contains(extension)) {
-            model.addAttribute("uploadError", "File type must be PNG or JPG.");
-            model.addAttribute("book", book);
-            return "pages/book";
-        }
+
+        String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
         try {
             Path directory = Paths.get("uploads", "images");
             Files.createDirectories(directory);
@@ -172,7 +160,7 @@ public class AdminController {
             model.addAttribute("genres", Genre.values());
             return "pages/book";
         }
-        if (bookService.validateBook(bookDto)) {
+        if (bookService.validateBookDto(bookDto)) {
             bookService.updateBook(id, bookDto);
         }
         logger.info("Book edited.");

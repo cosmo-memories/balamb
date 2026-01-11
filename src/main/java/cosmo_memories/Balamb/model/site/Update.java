@@ -76,11 +76,7 @@ public class Update {
         this.updateType = updateType;
     }
 
-    public LibraryUser getAuthor() {
-        return author;
-    }
+    public LibraryUser getAuthor() { return author; }
 
-    public void setAuthor(LibraryUser author) {
-        this.author = author;
-    }
+    public void setAuthor(LibraryUser author) { this.author = author; }
 }

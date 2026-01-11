@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 import java.time.Year;
 
 @Documented
-@Constraint(validatedBy = YearRange.YearRangeValidator.class) // nested class reference
+@Constraint(validatedBy = YearRange.YearRangeValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface YearRange {

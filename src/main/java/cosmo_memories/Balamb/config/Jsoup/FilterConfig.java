@@ -10,7 +10,6 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean<JsoupCleanFilter> jsoupFilter() {
         FilterRegistrationBean<JsoupCleanFilter> bean = new FilterRegistrationBean<>();
-
         bean.setFilter(new JsoupCleanFilter());
         bean.addUrlPatterns("/*");
         bean.setOrder(1);

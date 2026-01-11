@@ -1,8 +1,5 @@
 package cosmo_memories.Balamb.model.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AuthorDTO {
 
     private String firstName;

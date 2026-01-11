@@ -3,14 +3,12 @@ package cosmo_memories.Balamb.service.site;
 import cosmo_memories.Balamb.model.site.Update;
 import cosmo_memories.Balamb.repository.site.UpdateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class UpdateService {

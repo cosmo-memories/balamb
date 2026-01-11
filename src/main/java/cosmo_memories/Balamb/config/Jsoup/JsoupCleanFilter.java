@@ -10,10 +10,7 @@ public class JsoupCleanFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-
-        JsoupCleanRequestWrapper cleanRequest =
-                new JsoupCleanRequestWrapper((HttpServletRequest) request);
-
+        JsoupCleanRequestWrapper cleanRequest = new JsoupCleanRequestWrapper((HttpServletRequest) request);
         chain.doFilter(cleanRequest, response);
     }
 }
