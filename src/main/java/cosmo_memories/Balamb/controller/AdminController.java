@@ -103,6 +103,16 @@ public class AdminController {
         return "redirect:/updates";
     }
 
+    @PostMapping("/admin/update/{id}")
+    public ResponseEntity<?> resolveUpdate(@PathVariable Long id) {
+        try {
+            updateService.resolveUpdate(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Edit failed. The selected note may not exist.");
+        }
+    }
+
     @DeleteMapping("/admin/update/{id}")
     public ResponseEntity<?> deleteUpdate(@PathVariable Long id) {
         try {

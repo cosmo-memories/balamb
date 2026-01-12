@@ -16,6 +16,7 @@ public class Update {
 
     private LocalDateTime created;
     private LocalDateTime edited;
+    private boolean resolved;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
@@ -33,6 +34,7 @@ public class Update {
         this.edited = LocalDateTime.now();
         this.description = description;
         this.updateType = type;
+        this.resolved = false;
     }
 
 
@@ -79,4 +81,8 @@ public class Update {
     public LibraryUser getAuthor() { return author; }
 
     public void setAuthor(LibraryUser author) { this.author = author; }
+
+    public boolean getResolved() { return resolved; }
+
+    public void setResolved(boolean resolved) { this.resolved = resolved; }
 }

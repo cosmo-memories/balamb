@@ -28,11 +28,18 @@ public class UpdateService {
     }
 
     public Page<Update> findAllUpdates(int pageNo, int pageSize) {
-        return updateRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "edited")));
+        return updateRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "created")));
     }
 
     public Page<Update> findUpdatesByType(UpdateType type, int pageNo, int pageSize) {
-        return updateRepository.findByUpdateType(type, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "edited")));
+        return updateRepository.findByUpdateType(type, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "created")));
+    }
+
+    public void resolveUpdate(Long id) {
+        Update update = updateRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Update does not exist!"));
+        update.setResolved(true);
+        update.setEdited(LocalDateTime.now());
+        updateRepository.save(update);
     }
 
 }
