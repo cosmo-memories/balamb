@@ -74,11 +74,20 @@ public class MainController {
     }
 
     @GetMapping("/updates")
-    public String getUpdates(Model model, @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo) {
+    public String getUpdates(Model model,
+                             @RequestParam(name = "type", required = false) UpdateType type,
+                             @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo) {
         model.addAttribute("activePage", "updates");
         model.addAttribute("updateType", UpdateType.values());
         model.addAttribute("update", new Update());
-        Page<Update> updates = updateService.findAllUpdates(pageNo, 10);
+        int pageSize = 10;
+        Page<Update> updates;
+        if (type != null) {
+            updates = updateService.findUpdatesByType(type, pageNo, pageSize);
+            model.addAttribute("type", type);
+        } else {
+            updates = updateService.findAllUpdates(pageNo, pageSize);
+        }
         model.addAttribute("updateList", updates);
         return "pages/updates";
     }

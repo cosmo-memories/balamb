@@ -19,6 +19,29 @@
     </div>
     <hr class="mt-0">
 
+    <div class="container my-4 flex-wrap align-items-center" style="max-width: 800px">
+        <form action="#" th:action="@{/updates}" method="get" id="filterForm">
+            <div class="row g-4">
+                <div class="col-auto d-flex align-items-center justify-content-end">
+                    <span>Filter updates:</span>
+                </div>
+                <div class="col-auto col-lg">
+                    <select id="type" name="type" class="form-select">
+                        <option value="" disabled th:selected="${type == null}">Update Type</option>
+                        <option th:each="newType: ${updateType}" th:text="${newType.getLabel()}"
+                                th:value="${newType}" th:selected="${newType == type}"></option>
+                    </select>
+                </div>
+                <div class="col-auto d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                    <a href="/updates" class="btn btn-secondary">Reset Filter</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <hr class="mt-0">
+
     <p th:if="${error}" th:text="${errorText}"></p>
 
     <p th:if="${updateList.empty}">
@@ -48,7 +71,8 @@
     <div class="table-pagination">
         <ul class="pagination justify-content-center">
             <li th:class="${updateList.number eq 0} ? 'disabled' : ''">
-                <a th:if="${not updateList.first}" th:href="'/updates?pageNo=' + ${updateList.number - 1}">
+                <a th:if="${not updateList.first}" th:href="'/updates?pageNo=' + ${updateList.number - 1}
+                        + (${#strings.isEmpty(type)} ? '' : '&type=' + ${type})">
                     Previous
                 </a>
                 <a th:if="${updateList.first}">Previous</a>
@@ -57,7 +81,7 @@
                 |
             </li>
             <li th:class="${updateList.number + 1 ge updateList.totalPages} ? 'disabled' : ''">
-                <a th:if="${not updateList.last}" th:href="'/updates?pageNo=' + ${updateList.number + 1}">
+                <a th:if="${not updateList.last}" th:href="'/updates?pageNo=' + ${updateList.number + 1} + (${#strings.isEmpty(type)} ? '' : '&type=' + ${type})">
                     Next
                 </a>
                 <a th:if="${updateList.last}">Next</a>

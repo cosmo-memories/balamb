@@ -1,5 +1,6 @@
 package cosmo_memories.Balamb.service.site;
 
+import cosmo_memories.Balamb.model.enums.UpdateType;
 import cosmo_memories.Balamb.model.site.Update;
 import cosmo_memories.Balamb.repository.site.UpdateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class UpdateService {
 
     public Update submitUpdate(Update update) {
         update.setCreated(LocalDateTime.now());
+        update.setEdited(LocalDateTime.now());
         return updateRepository.save(update);
     }
 
@@ -26,7 +28,11 @@ public class UpdateService {
     }
 
     public Page<Update> findAllUpdates(int pageNo, int pageSize) {
-        return updateRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "created")));
+        return updateRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "edited")));
+    }
+
+    public Page<Update> findUpdatesByType(UpdateType type, int pageNo, int pageSize) {
+        return updateRepository.findByUpdateType(type, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "edited")));
     }
 
 }

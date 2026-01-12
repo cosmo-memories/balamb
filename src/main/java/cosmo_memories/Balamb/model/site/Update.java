@@ -30,7 +30,7 @@ public class Update {
 
     public Update(String description, UpdateType type) {
         this.created = LocalDateTime.now();
-        this.edited = null;
+        this.edited = LocalDateTime.now();
         this.description = description;
         this.updateType = type;
     }
