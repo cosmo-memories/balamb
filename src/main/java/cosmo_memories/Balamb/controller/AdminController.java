@@ -177,4 +177,22 @@ public class AdminController {
         return "redirect:/browse/" + id;
     }
 
+
+    @PostMapping("/admin/update/{id}/complete")
+    public String completeBook(Model model, @PathVariable Long id) {
+        try {
+            Book book = bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found"));
+            bookService.toggleComplete(book);
+            return "redirect:/browse/" + id;
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("activePage", "browse");
+            model.addAttribute("book", bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found")));
+            model.addAttribute("bookDto", model.getAttribute("bookDto"));
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("genres", Genre.values());
+            model.addAttribute("error", "Something went wrong.");
+            return "pages/book";
+        }
+    }
+
 }

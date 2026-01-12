@@ -75,12 +75,19 @@
         <p class="card-text">
             <b>Notes:</b> <span th:text="${book.note}"></span>
         </p>
+        <p class="card-text">
+            <b>Status:</b> <span th:text="Unread" th:if="${!book.complete}"></span><span th:text="Read" th:if="${book.complete}"></span>
+        </p>
     </div>
     <hr>
     <div sec:authorize="isAuthenticated()">
-        Admin controls here (WIP)
+        <a th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete Book</a>
+        <form method="post" th:action="@{/admin/update/{id}/complete(id=${book.id})}">
+            <button type="submit" class="btn btn-secondary py-1 my-1" th:if="${!book.complete}">Mark Book As Read</button>
+            <button type="submit" class="btn btn-secondary py-1 my-1" th:if="${book.complete}">Mark Book As Unread</button>
+        </form>
 
-        <a sec:authorize="isAuthenticated()" th:onclick="'deleteBook(' + ${book.id} + ')'" class="btn btn-secondary py-1 my-1">Delete Book</a>
+        <hr>
 
         Upload cover:
         <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
@@ -90,7 +97,7 @@
             <button type="submit" class="btn btn-primary">Upload image</button>
         </form>
 
-        <hr class="mt-0">
+        <hr>
         Edit book:
         <form action="#" th:action="@{/admin/edit/{id}(id=${book.id})}" th:object="${bookDto}" method="post">
             <div class="container my-2">

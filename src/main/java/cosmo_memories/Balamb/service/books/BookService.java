@@ -259,4 +259,9 @@ public class BookService {
         return "";
     }
 
+    public void toggleComplete(Book book) {
+        book.setComplete(!book.getComplete());
+        bookRepository.save(book);
+    }
+
 }

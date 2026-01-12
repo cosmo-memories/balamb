@@ -19,11 +19,14 @@ public abstract class Item {
     private Year pubYear;
     private String image;
     private LocalDateTime added;
+    private boolean complete;
 
     protected Item() {}
 
     public Item(String title) {
         this.title = title;
+        this.complete = false;
+        this.added = LocalDateTime.now();
     }
 
 
@@ -66,4 +69,8 @@ public abstract class Item {
     public String getImage() { return image; }
 
     public void setImage(String image) { this.image = image; }
+
+    public boolean getComplete() { return complete; }
+
+    public void setComplete(boolean complete) { this.complete = complete; }
 }
