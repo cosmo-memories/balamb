@@ -67,7 +67,7 @@
                             <p class="card-text mt-auto">
                                 <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
                                 <b class="mx-1">•</b>
-                                <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
+                                <b th:text="${book.genre.getLabel()}" class="text-secondary"></b><b th:if="${book.subgenre != null}" th:text="${'/' + book.subgenre.label}" class="text-secondary"></b>
                             </p>
                         </div>
                     </div>

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
 
+/**
+ * Superclass for Books and other related entities. To be extended in future with different media types.
+ */
 @MappedSuperclass
 public abstract class Item {
 

@@ -3,6 +3,9 @@ package cosmo_memories.Balamb.model.accounts;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * Authority entity to control user access to restricted pages.
+ */
 @Entity
 public class Authority implements GrantedAuthority {
 

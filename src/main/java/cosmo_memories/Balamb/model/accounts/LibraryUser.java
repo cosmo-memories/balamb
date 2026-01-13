@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User entity storing login credentials and authorities.
+ */
 @Entity(name = "LIBRARY_USER")
 public class LibraryUser implements Serializable {
 

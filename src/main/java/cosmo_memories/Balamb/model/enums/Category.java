@@ -1,5 +1,8 @@
 package cosmo_memories.Balamb.model.enums;
 
+/**
+ * Enum for book categories (fiction, nonfiction, etc.).
+ */
 public enum Category {
     FICTION("Fiction"),
     NONFICTION("Nonfiction"),

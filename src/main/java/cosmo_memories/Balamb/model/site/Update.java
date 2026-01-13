@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
+/**
+ * Update entity. Stores small update notes, To Dos, etc.
+ */
 @Entity
 public class Update {
 

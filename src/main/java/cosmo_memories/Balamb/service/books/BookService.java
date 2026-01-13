@@ -22,6 +22,9 @@ import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * Service class for Book-related functionality.
+ */
 @Service
 public class BookService {
 
@@ -34,6 +37,12 @@ public class BookService {
     @Autowired
     BookRepository bookRepository;
 
+    /**
+     * Update existing Book with information provided via DTO.
+     * @param id            Book ID
+     * @param bookDto       Book DTO
+     * @return              Book
+     */
     public Book updateBook(long id, BookDTO bookDto) {
         Book newBook = mapDtoToBook(bookDto);
         Book currentBook = bookRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Book not found"));
@@ -58,6 +67,9 @@ public class BookService {
         if (!Objects.equals(currentBook.getGenre(), newBook.getGenre())) {
             currentBook.setGenre(newBook.getGenre());
         }
+        if (!Objects.equals(currentBook.getSubgenre(), newBook.getSubgenre())) {
+            currentBook.setSubgenre(newBook.getSubgenre());
+        }
         if (!Objects.equals(currentBook.getCategory(), newBook.getCategory())) {
             currentBook.setCategory(newBook.getCategory());
         }
@@ -67,10 +79,20 @@ public class BookService {
         return saveBook(currentBook);
     }
 
+    /**
+     * Save new Book with information provided via DTO.
+     * @param bookDto       DTO
+     * @return              New Book
+     */
     public Book saveBookFromDto(BookDTO bookDto) {
         return bookRepository.save(mapDtoToBook(bookDto));
     }
 
+    /**
+     * Map information from DTO to Book.
+     * @param dto           DTO
+     * @return              New Book
+     */
     public Book mapDtoToBook(BookDTO dto) {
         Book book = new Book();
         book.setTitle(dto.getTitle());
@@ -93,6 +115,9 @@ public class BookService {
         if (dto.getSeries() != null && !dto.getSeries().isBlank()) {
             book.setSeries(dto.getSeries());
         }
+        if (dto.getSubgenre() != null && dto.getSubgenre() != dto.getGenre()) {
+            book.setSubgenre(dto.getSubgenre());
+        }
         book.setGenre(dto.getGenre());
         book.setCategory(dto.getCategory());
         if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
@@ -110,6 +135,11 @@ public class BookService {
         return book;
     }
 
+    /**
+     * Create DTO with information from Book.
+     * @param book      Book
+     * @return          New DTO
+     */
     public BookDTO mapBookToDto(Book book) {
         BookDTO dto = new BookDTO();
         dto.setTitle(book.getTitle());
@@ -121,6 +151,7 @@ public class BookService {
         }
         dto.setIsbn(book.getIsbn());
         dto.setGenre(book.getGenre());
+        dto.setSubgenre(book.getSubgenre());
         dto.setCategory(book.getCategory());
         dto.setNote(book.getNote());
         dto.setSeries(book.getSeries());
@@ -132,6 +163,11 @@ public class BookService {
         return dto;
     }
 
+    /**
+     * Run all validation for Book DTO.
+     * @param book          DTO
+     * @return              Boolean
+     */
     public boolean validateBookDto(BookDTO book) {
         boolean valid = true;
         if (!validateTitle(book.getTitle())) {
@@ -170,22 +206,47 @@ public class BookService {
         return valid;
     }
 
+    /**
+     * Validate Book title.
+     * @param title     Title
+     * @return          Boolean
+     */
     public boolean validateTitle(String title) {
         return !title.isBlank() && title.length() <= 60;
     }
 
+    /**
+     * Validate Book publisher.
+     * @param publisher     Publisher
+     * @return              Boolean
+     */
     public boolean validatePublisher(String publisher) {
         return !publisher.isBlank() && publisher.length() <= 30;
     }
 
+    /**
+     * Validate Book series.
+     * @param series        Series
+     * @return              Boolean
+     */
     public boolean validateSeries(String series) {
         return !series.isBlank() && series.length() <= 30;
     }
 
+    /**
+     * Validate Book notes.
+     * @param note          Note
+     * @return              Boolean
+     */
     public boolean validateNote(String note) {
         return !note.isBlank() && note.length() <= 500;
     }
 
+    /**
+     * Validate Book publication year.
+     * @param pubYear       Year
+     * @return              Boolean
+     */
     public boolean validatePubYear(String pubYear) {
         boolean valid = true;
         try {
@@ -198,10 +259,19 @@ public class BookService {
         return valid;
     }
 
+    /**
+     * Validate Book ISBN. Only validates based on length, not that the given string is a real ISBN.
+     * @param isbn      ISBN
+     * @return          Boolean
+     */
     public boolean validateIsbn(String isbn) {
         return isbn.replace("-", "").length() >= 10 && isbn.replace("-", "").length() <= 13;
     }
 
+    /**
+     * Select a random Book from the database.
+     * @return          Book
+     */
     public Book findRandomBook() {
         int rand = (int)(Math.random() * bookRepository.count());
         Page<Book> book = bookRepository.findAll(PageRequest.of(rand, 1));
@@ -212,38 +282,86 @@ public class BookService {
         }
     }
 
+    /**
+     * Find all Books on given Browse page.
+     * @param pageNo        Page number
+     * @return              Page of Books
+     */
     public Page<Book> findAllBooksOnPage(int pageNo) {
         return bookRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
+    /**
+     * Find Book by ID.
+     * @param id        Book ID
+     * @return          Optional containing Book if found
+     */
     public Optional<Book> findBookById(Long id) {
         return bookRepository.findById(id);
     }
 
+    /**
+     * Save Book.
+     * @param book      Book
+     * @return          Book
+     */
     public Book saveBook(Book book) {
         return bookRepository.save(book);
     }
 
+    /**
+     * Find all Books on given page, filtered by Genre.
+     * @param genre         Genre
+     * @param pageNo        Page number
+     * @return              Page of Books
+     */
     public Page<Book> findBookByGenre(Genre genre, int pageNo) {
-        return bookRepository.findByGenreOrderByAddedDesc(genre, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
+        return bookRepository.findByGenreOrSubgenreOrderByAddedDesc(genre, genre, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
+    /**
+     * Find all Books on given page, filtered by Category.
+     * @param category      Category
+     * @param pageNo        Page number
+     * @return              Page of Books
+     */
     public Page<Book> findBookByCategory(Category category, int pageNo) {
         return bookRepository.findByCategoryOrderByAddedDesc(category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
+    /**
+     * Find all Books on given page, filtered by Genre and Category.
+     * @param genre         Genre
+     * @param category      Category
+     * @param pageNo        Page number
+     * @return              Page of Books
+     */
     public Page<Book> findBookByGenreAndCategory(Genre genre, Category category, int pageNo) {
-        return bookRepository.findByGenreAndCategoryOrderByAddedDesc(genre, category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
+        return bookRepository.findByGenreOrSubgenreAndCategoryOrderByAddedDesc(genre, genre, category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
     }
 
+    /**
+     * Delete Book.
+     * @param id            Book ID
+     */
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
 
+    /**
+     * Find most recently added Books.
+     * @param numBooks      Number of Books
+     * @return              List of Books
+     */
     public List<Book> findNewestBooks(int numBooks) {
         return bookRepository.findNewestBooks(PageRequest.of(0, numBooks));
     }
 
+    /**
+     * Validate image file upload.
+     * @param file      File
+     * @return          Empty string if valid, error string if invalid
+     */
     public String validateImage(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return "No file selected.";
@@ -259,6 +377,10 @@ public class BookService {
         return "";
     }
 
+    /**
+     * Toggle complete/incomplete boolean on given Book.
+     * @param book          Book
+     */
     public void toggleComplete(Book book) {
         book.setComplete(!book.getComplete());
         bookRepository.save(book);

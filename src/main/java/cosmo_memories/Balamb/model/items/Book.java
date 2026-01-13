@@ -7,16 +7,20 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Book entity. Note that books may have multiple authors. Other fields are generally straightforward.
+ */
 @Entity
 public class Book extends Item {
 
     private String isbn;
     private Genre genre;
+    private Genre subgenre;
     private Category category;
     private String note;
     private String series;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "written_by",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -46,6 +50,14 @@ public class Book extends Item {
 
     public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+
+    public Genre getSubgenre() {
+        return subgenre;
+    }
+
+    public void setSubgenre(Genre subgenre) {
+        this.subgenre = subgenre;
     }
 
     public Category getCategory() {

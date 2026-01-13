@@ -31,6 +31,9 @@ import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * Controller for functions and pages only accessible to logged-in users.
+ */
 @Controller
 public class AdminController {
 
@@ -45,18 +48,33 @@ public class AdminController {
     @Autowired
     UserService userService;
 
+    /**
+     * GET mapping for admin panel.
+     * @param model     Model
+     * @return          Admin page
+     */
     @GetMapping("/admin")
     public String getAdmin(Model model) {
         model.addAttribute("activePage", "admin");
         return "pages/admin/admin";
     }
 
+    /**
+     * GET mapping for login form.
+     * @param model     Model
+     * @return          Login page
+     */
     @GetMapping("/login")
     public String getLogin(Model model) {
         model.addAttribute("activePage", "login");
         return "pages/login";
     }
 
+    /**
+     * GET mapping for new book form.
+     * @param model     Model
+     * @return          New book form
+     */
     @GetMapping("/admin/add/book")
     public String getAddBook(Model model) {
         model.addAttribute("activePage", "add_book");
@@ -66,6 +84,13 @@ public class AdminController {
         return "pages/admin/add";
     }
 
+    /**
+     * POST mapping for new book form.
+     * @param model             Model
+     * @param bookDto           BookDTO
+     * @param bindingResult     BindingResult
+     * @return                  New book form
+     */
     @PostMapping("/admin/add/book")
     public String submitBook(Model model, @Valid @ModelAttribute("bookDto") BookDTO bookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -83,6 +108,14 @@ public class AdminController {
         return "redirect:/admin/add/book";
     }
 
+    /**
+     * POST mapping for new update form.
+     * @param model             Model
+     * @param principal         Logged in user
+     * @param update            Update object
+     * @param bindingResult     BindingResult
+     * @return                  Updates page
+     */
     @PostMapping("/admin/update")
     public String submitUpdate(Model model, @AuthenticationPrincipal LibraryUserDetails principal,
                                @Valid @ModelAttribute("update") Update update, BindingResult bindingResult) {
@@ -103,6 +136,11 @@ public class AdminController {
         return "redirect:/updates";
     }
 
+    /**
+     * POST mapping for resolving To Do/Known Issue updates.
+     * @param id        Update ID
+     * @return          ResponseEntity
+     */
     @PostMapping("/admin/update/{id}")
     public ResponseEntity<?> resolveUpdate(@PathVariable Long id) {
         try {
@@ -113,6 +151,11 @@ public class AdminController {
         }
     }
 
+    /**
+     * DELETE mapping for updates.
+     * @param id        Update ID
+     * @return          ResponseEntity
+     */
     @DeleteMapping("/admin/update/{id}")
     public ResponseEntity<?> deleteUpdate(@PathVariable Long id) {
         try {
@@ -123,6 +166,11 @@ public class AdminController {
         }
     }
 
+    /**
+     * DELETE mapping for books.
+     * @param id        Book ID
+     * @return          ResponseEntity
+     */
     @DeleteMapping("/admin/book/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         try {
@@ -133,6 +181,13 @@ public class AdminController {
         }
     }
 
+    /**
+     * POST mapping for adding images.
+     * @param model     Model
+     * @param id        Book ID
+     * @param file      Uploaded file
+     * @return          Book page
+     */
     @PostMapping("/admin/add/image/{id}")
     public String uploadImage(Model model, @PathVariable Long id, @RequestParam("uploadedFile") MultipartFile file) {
         Book book = bookService.findBookById(id).orElseThrow(() -> new IllegalArgumentException("Book does not exist"));
@@ -159,6 +214,14 @@ public class AdminController {
         return "redirect:/browse/" + id;
     }
 
+    /**
+     * POST mapping for editing books.
+     * @param model             Model
+     * @param id                Book ID
+     * @param bookDto           Book DTO
+     * @param bindingResult     BindingResult
+     * @return                  Book page
+     */
     @PostMapping("/admin/edit/{id}")
     public String editBook(Model model, @PathVariable long id, @Valid @ModelAttribute("bookDto") BookDTO bookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -177,7 +240,12 @@ public class AdminController {
         return "redirect:/browse/" + id;
     }
 
-
+    /**
+     * POST mapping for toggling a book's complete/incomplete marker.
+     * @param model         Model
+     * @param id            Book ID
+     * @return              Book page
+     */
     @PostMapping("/admin/update/{id}/complete")
     public String completeBook(Model model, @PathVariable Long id) {
         try {

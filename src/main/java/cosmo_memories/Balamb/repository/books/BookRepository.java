@@ -12,14 +12,18 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * Repository for Book entities.
+ */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, PagingAndSortingRepository<Book, Long> {
 
-    Page<Book> findByGenreOrderByAddedDesc(Genre genre, Pageable pageable);
+    Page<Book> findByGenreOrSubgenreOrderByAddedDesc(Genre genre, Genre subgenre, Pageable pageable);
 
     Page<Book> findByCategoryOrderByAddedDesc(Category category, Pageable pageable);
 
-    Page<Book> findByGenreAndCategoryOrderByAddedDesc(Genre genre, Category category, Pageable pageable);
+    @Query("SELECT b FROM Book b WHERE (b.genre = :genre OR b.subgenre = :subgenre) AND b.category = :category ORDER BY b.added DESC")
+    Page<Book> findByGenreOrSubgenreAndCategoryOrderByAddedDesc(Genre genre, Genre subgenre, Category category, Pageable pageable);
 
     @Query("SELECT b FROM Book b ORDER BY b.added DESC")
     List<Book> findNewestBooks(Pageable pageable);

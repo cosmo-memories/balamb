@@ -38,7 +38,7 @@
                 <div class="col-lg-10">
                     <div class="card-body bg-dark" style="height: 100%">
                         <h5 class="card-title h2 text-white" th:text="${book.title}"></h5>
-                        <p class="card-text text-secondary">
+                        <p class="card-text text-secondary" th:if="${book.series != null}">
                             <b>Series: <span th:text="${book.series}"></span></b>
                         </p>
                         <p class="card-text text-secondary">
@@ -51,29 +51,29 @@
                         </p>
                         <hr class="mt-0" style="width: 50%">
                         <p class="card-text text-secondary">
-                            Genre: <span th:text="${book.genre.getLabel()}"></span>
+                            Genre(s): <span th:text="${book.genre.getLabel()}"></span><span th:if="${book.subgenre != null}" th:text="${', ' + book.subgenre.label}"></span>
                         </p>
                         <p class="card-text text-secondary">
                             Category: <span th:text="${book.category.getLabel()}"></span>
                         </p>
                         <p class="card-text text-secondary">
-                            Publisher: <span th:text="${book.publisher}"></span>
+                            Publisher: <span th:text="${book.publisher}"></span><span th:if="${book.publisher == null}" th:text="Unknown"></span>
                         </p>
                         <p class="card-text text-secondary">
-                            Publication Year: <span th:text="${book.pubYear}"></span>
+                            Publication Year: <span th:text="${book.pubYear}"></span><span th:if="${book.pubYear == null}" th:text="Unknown"></span>
                         </p>
                         <p class="card-text text-secondary">
-                            ISBN: <span th:text="${book.isbn}"></span>
+                            ISBN: <span th:text="${book.isbn}"></span><span th:if="${book.isbn == null}" th:text="Unknown"></span>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </p>
-    <div th:if="${book.note != null}">
+    <div>
         <hr class="mt-0">
         <p class="card-text">
-            <b>Notes:</b> <span th:text="${book.note}"></span>
+            <b>Notes:</b> <span th:text="${book.note}"></span></span><span th:if="${book.note == null}" th:text="None"></span>
         </p>
         <p class="card-text">
             <b>Status:</b> <span th:text="Unread" th:if="${!book.complete}"></span><span th:text="Read" th:if="${book.complete}"></span>
@@ -169,24 +169,35 @@
 
                 <div class="row my-2">
                     <div class="col">
+                        <label for="category">Category</label> <span class="text-danger">(Required)</span>
+                        <select id="category" th:field="*{category}" class="form-select">
+                            <option th:each="category: ${categories}" th:text="${category.getLabel()}" th:value="${category}">Category</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                    </div>
+                    <div class="col">
                         <label for="pubYear">Publication Year</label>
                         <span th:if="${#fields.hasErrors('pubYear')}" th:errors="*{pubYear}" class="text-danger"></span>
                         <input id="pubYear" type="number" th:field="*{pubYear}" placeholder="Publication Year" class="form-control"
                                min="0" />
                     </div>
+                </div>
+
+                <div class="row my-2">
                     <div class="col">
-                        <label for="genre">Genre</label>
+                        <label for="genre">Genre</label> <span class="text-danger">(Required)</span>
                         <select id="genre" th:field="*{genre}" class="form-select">
                             <option th:each="genre: ${genres}" th:text="${genre.getLabel()}" th:value="${genre}">Genre</option>
                         </select>
                         <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></span>
                     </div>
                     <div class="col">
-                        <label for="category">Category</label>
-                        <select id="category" th:field="*{category}" class="form-select">
-                            <option th:each="category: ${categories}" th:text="${category.getLabel()}" th:value="${category}">Category</option>
+                        <label for="subgenre">Subgenre</label>
+                        <select id="subgenre" th:field="*{subgenre}" class="form-select">
+                            <option value="" id="subgenre-placeholder">None</option>
+                            <option th:each="subgenre: ${genres}" th:text="${subgenre.getLabel()}" th:value="${subgenre}">Genre</option>
                         </select>
-                        <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                        <span th:if="${#fields.hasErrors('subgenre')}" th:errors="*{subgenre}"></span>
                     </div>
                 </div>
 

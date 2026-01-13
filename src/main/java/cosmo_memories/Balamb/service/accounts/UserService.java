@@ -6,33 +6,37 @@ import cosmo_memories.Balamb.repository.accounts.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service for User-related functions.
+ */
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    // TODO:
-//    public LibraryUser register(UserDTO userDTO) {
-//        LibraryUser libraryUser = new LibraryUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()));
-//        libraryUser.grantAuthority("ROLE_ADMIN");
-//        return userRepository.save(libraryUser);
-//    }
-
+    /**
+     * Find User by ID
+     * @param id        User ID
+     * @return          Optional containing User if found
+     */
     public Optional<LibraryUser> findUserById(Long id) {
         return userRepository.findById(id);
     }
 
+    /**
+     * Find User by "username" (email)
+     * @param email                         Email
+     * @return                              LibraryUserDetails for User
+     * @throws UsernameNotFoundException    Thrown if User not found
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         LibraryUser libraryUser = userRepository.findByEmail(email)

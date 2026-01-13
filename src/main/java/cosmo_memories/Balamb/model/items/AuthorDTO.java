@@ -1,5 +1,8 @@
 package cosmo_memories.Balamb.model.items;
 
+/**
+ * DTO for Author entities.
+ */
 public class AuthorDTO {
 
     private String firstName;

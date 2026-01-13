@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for all publicly accessible pages.
+ */
 @Controller
 public class MainController {
 
@@ -28,6 +31,11 @@ public class MainController {
     @Autowired
     BookService bookService;
 
+    /**
+     * GET mapping for home page.
+     * @param model     Model
+     * @return          Home page
+     */
     @GetMapping("/")
     public String getHome(Model model) {
         int numBooks = 6;
@@ -41,6 +49,14 @@ public class MainController {
         return "pages/home";
     }
 
+    /**
+     * GET mapping for browse records page.
+     * @param model         Model
+     * @param genre         Search genre
+     * @param category      Search category
+     * @param pageNo        Page number
+     * @return              Browse page
+     */
     @GetMapping("/browse")
     public String getBrowse(Model model,
                             @RequestParam(name = "genre", required = false) Genre genre,
@@ -67,12 +83,24 @@ public class MainController {
         return "pages/browse";
     }
 
+    /**
+     * GET mapping for about page.
+     * @param model     Model
+     * @return          About page
+     */
     @GetMapping("/about")
     public String getAbout(Model model) {
         model.addAttribute("activePage", "about");
         return "pages/about";
     }
 
+    /**
+     * GET mapping for updates page.
+     * @param model     Model
+     * @param type      Search type
+     * @param pageNo    Page number
+     * @return          Updates page
+     */
     @GetMapping("/updates")
     public String getUpdates(Model model,
                              @RequestParam(name = "type", required = false) UpdateType type,
@@ -92,6 +120,12 @@ public class MainController {
         return "pages/updates";
     }
 
+    /**
+     * GET mapping for individual book page.
+     * @param model     Model
+     * @param id        Book ID
+     * @return          Individual book page
+     */
     @GetMapping("/browse/{id}")
     public String getBookPage(Model model, @PathVariable Long id) {
         Optional<Book> book = bookService.findBookById(id);

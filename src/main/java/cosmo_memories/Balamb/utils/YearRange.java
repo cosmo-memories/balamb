@@ -8,6 +8,9 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.lang.annotation.*;
 import java.time.Year;
 
+/**
+ * Validation support for publication date ranges.
+ */
 @Documented
 @Constraint(validatedBy = YearRange.YearRangeValidator.class)
 @Target({ ElementType.FIELD })

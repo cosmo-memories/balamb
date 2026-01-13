@@ -1,5 +1,8 @@
 package cosmo_memories.Balamb.model.enums;
 
+/**
+ * Enum for book genres (scifi, fantasy, etc.).
+ */
 public enum Genre {
     SCIFI("Science Fiction"),
     FANTASY("Fantasy"),

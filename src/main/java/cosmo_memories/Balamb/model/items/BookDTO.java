@@ -9,6 +9,9 @@ import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DTO for Book entities.
+ */
 public class BookDTO {
 
     @NotBlank(message = "Title cannot be blank.")
@@ -28,6 +31,7 @@ public class BookDTO {
     private String isbn;
 
     private Genre genre;
+    private Genre subgenre;
     private Category category;
 
     @Size(max=500, message = "Note cannot be more than 500 characters.")
@@ -81,6 +85,14 @@ public class BookDTO {
 
     public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+
+    public Genre getSubgenre() {
+        return subgenre;
+    }
+
+    public void setSubgenre(Genre subgenre) {
+        this.subgenre = subgenre;
     }
 
     public Category getCategory() {

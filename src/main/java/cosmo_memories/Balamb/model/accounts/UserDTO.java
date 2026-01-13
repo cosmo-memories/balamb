@@ -1,5 +1,9 @@
 package cosmo_memories.Balamb.model.accounts;
 
+/**
+ * DTO for LibraryUsers.
+ * TODO: check if this is actually used or doing anything.
+ */
 public class UserDTO {
 
     private String firstName;

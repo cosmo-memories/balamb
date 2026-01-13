@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Author entity. Note that authors may write multiple books, and books may be written by multiple authors.
+ */
 @Entity
 public class Author {
 
@@ -43,7 +46,6 @@ public class Author {
     public String getCommaSeparatedFullName() {
         return lastName + ", " + firstName;
     }
-
 
     public long getId() {
         return id;

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service method for Author-related functions.
+ */
 @Service
 public class AuthorService {
 
@@ -15,6 +18,11 @@ public class AuthorService {
 
     public AuthorService() {}
 
+    /**
+     * Validate Author names.
+     * @param fullName      Full name in form "Last, First"
+     * @return              Boolean
+     */
     public boolean validateAuthor(String fullName) {
         boolean valid = true;
         if (!fullName.contains(",")) {
@@ -28,6 +36,12 @@ public class AuthorService {
         return valid;
     }
 
+    /**
+     * Find Author by first and last name.
+     * @param firstName     First name
+     * @param lastName      Last name
+     * @return              Optional containing Author if found
+     */
     public Optional<Author> findByFullName(String firstName, String lastName) {
         return authorRepository.findByFirstNameAndLastName(firstName, lastName);
     }

@@ -5,6 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * UserDetails implementation for LibraryUsers.
+ */
 public class LibraryUserDetails implements UserDetails {
 
     private final LibraryUser libraryUser;
