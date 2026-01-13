@@ -19,26 +19,29 @@
     </div>
     <hr class="mt-0">
 
-    <div class="container my-4 flex-wrap align-items-center" style="max-width: 800px">
+    <div class="container my-4" style="max-width: 600px">
         <form action="#" th:action="@{/updates}" method="get" id="filterForm">
-            <div class="row g-4">
-                <div class="col-auto d-flex align-items-center justify-content-end">
-                    <span>Filter updates:</span>
-                </div>
-                <div class="col-auto col-lg">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="flex-grow-1">
                     <select id="type" name="type" class="form-select">
                         <option value="" disabled th:selected="${type == null}">Update Type</option>
-                        <option th:each="newType: ${updateType}" th:text="${newType.getLabel()}"
-                                th:value="${newType}" th:selected="${newType == type}"></option>
+                        <option th:each="newType: ${updateType}"
+                                th:text="${newType.getLabel()}"
+                                th:value="${newType}"
+                                th:selected="${newType == type}">
+                        </option>
                     </select>
                 </div>
-                <div class="col-auto d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Apply Filter</button>
-                    <a href="/updates" class="btn btn-secondary">Reset Filter</a>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary btn-m">Apply Filter</button>
+                    <a href="/updates" class="btn btn-secondary btn-m">Reset Filter</a>
                 </div>
             </div>
         </form>
     </div>
+
+
+
 
     <hr class="mt-0">
 
