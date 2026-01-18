@@ -193,13 +193,16 @@ public class AdminController {
         Book book = bookService.findBookById(id).orElseThrow(() -> new IllegalArgumentException("Book does not exist"));
         String error = bookService.validateImage(file);
         if (error != null && !error.isEmpty()) {
+            logger.info("File upload failed verification.");
             model.addAttribute("uploadError", error);
             model.addAttribute("book", book);
+            model.addAttribute("bookDto", bookService.mapBookToDto(book));
+            model.addAttribute("activePage", "browse");
             return "pages/book";
         }
 
-        String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
         try {
+            String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
             Path directory = Paths.get("uploads", "images");
             Files.createDirectories(directory);
             Path filepath = directory.resolve(id + "." + extension);
@@ -207,8 +210,10 @@ public class AdminController {
             book.setImage(id + "." + extension);
             bookService.saveBook(book);
         } catch (IOException e) {
+            logger.info("Something went wrong uploading a file.");
             model.addAttribute("uploadError", "Something went wrong uploading the file.");
             model.addAttribute("book", book);
+            model.addAttribute("activePage", "browse");
             return "pages/book";
         }
         return "redirect:/browse/" + id;
@@ -231,6 +236,8 @@ public class AdminController {
             model.addAttribute("bookDto", bookDto);
             model.addAttribute("categories", Category.values());
             model.addAttribute("genres", Genre.values());
+            model.addAttribute("formErrors", true);
+            model.addAttribute("activePage", "browse");
             return "pages/book";
         }
         if (bookService.validateBookDto(bookDto)) {
