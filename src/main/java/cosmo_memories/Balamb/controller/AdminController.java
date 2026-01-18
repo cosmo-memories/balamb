@@ -237,11 +237,12 @@ public class AdminController {
             model.addAttribute("categories", Category.values());
             model.addAttribute("genres", Genre.values());
             model.addAttribute("formErrors", true);
-            model.addAttribute("activePage", "browse");
             return "pages/book";
         }
         if (bookService.validateBookDto(bookDto)) {
             bookService.updateBook(id, bookDto);
+        } else {
+            logger.info("Failed book validation.");
         }
         logger.info("Book edited.");
         return "redirect:/browse/" + id;

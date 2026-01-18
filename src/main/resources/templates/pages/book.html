@@ -126,7 +126,7 @@
                             <label for="title">Title</label> <span class="text-danger">(Required)</span>
                             <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></span>
                             <input id="title" type="text" class="form-control" th:field="*{title}" placeholder="Title"
-                                   required minlength="1" maxlength="60" />
+                                   required minlength="1" maxlength="90" />
                         </div>
                     </div>
 
@@ -177,7 +177,7 @@
                             <label for="series">Series</label>
                             <span th:if="${#fields.hasErrors('series')}" th:errors="*{series}" class="text-danger"></span>
                             <input id="series" type="text" th:field="*{series}" placeholder="Series" class="form-control"
-                                   maxlength="30" />
+                                   maxlength="60" />
                         </div>
                         <div class="col">
                             <label for="note">Library Notes</label>

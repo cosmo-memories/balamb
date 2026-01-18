@@ -15,7 +15,7 @@ import java.util.List;
 public class BookDTO {
 
     @NotBlank(message = "Title cannot be blank.")
-    @Size(min=1, max=60, message = "Title must be between 1 and 60 characters.")
+    @Size(min=1, max=90, message = "Title must be between 1 and 90 characters.")
     private String title;
 
     @Size(max=30, message = "Publisher cannot be more than 30 characters.")
@@ -37,7 +37,7 @@ public class BookDTO {
     @Size(max=500, message = "Note cannot be more than 500 characters.")
     private String note;
 
-    @Size(max=30, message = "Series cannot be more than 30 characters.")
+    @Size(max=60, message = "Series cannot be more than 60 characters.")
     private String series;
 
     @NotNull(message = "At least one author is required.")

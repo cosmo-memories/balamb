@@ -51,6 +51,8 @@ public class BookService {
         }
         if (!Objects.equals(currentBook.getAuthors(), newBook.getAuthors())) {
             currentBook.setAuthors(newBook.getAuthors());
+            logger.info(currentBook.getAuthors().getFirst().getFirstName());
+            logger.info(String.valueOf(currentBook.getAuthors().size()));
         }
         if (!Objects.equals(currentBook.getPublisher(), newBook.getPublisher())) {
             currentBook.setPublisher(newBook.getPublisher());
@@ -76,6 +78,7 @@ public class BookService {
         if (!Objects.equals(currentBook.getPubYear(), newBook.getPubYear())) {
             currentBook.setPubYear(newBook.getPubYear());
         }
+        logger.info("Saving book.");
         return saveBook(currentBook);
     }
 
@@ -127,7 +130,10 @@ public class BookService {
                 if (existingAuthor.isPresent()) {
                     book.addAuthor(existingAuthor.get());
                 } else {
-                    book.addAuthor(new Author(names[1].trim(), names[0].trim()));
+                    Author newAuthor = new Author(names[1].trim(), names[0].trim());
+                    authorService.save(newAuthor);
+                    book.addAuthor(newAuthor);
+                    logger.info("Adding author:{}", book.getAuthors().getLast().getFullName());
                 }
             }
         }
@@ -212,7 +218,7 @@ public class BookService {
      * @return          Boolean
      */
     public boolean validateTitle(String title) {
-        return !title.isBlank() && title.length() <= 60;
+        return !title.isBlank() && title.length() <= 90;
     }
 
     /**
@@ -230,7 +236,7 @@ public class BookService {
      * @return              Boolean
      */
     public boolean validateSeries(String series) {
-        return !series.isBlank() && series.length() <= 30;
+        return !series.isBlank() && series.length() <= 60;
     }
 
     /**

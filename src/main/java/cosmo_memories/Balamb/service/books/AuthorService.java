@@ -46,4 +46,8 @@ public class AuthorService {
         return authorRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
+    public Author save(Author author) {
+        return authorRepository.save(author);
+    }
+
 }
