@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -360,7 +361,9 @@ public class BookService {
      * @return              List of Books
      */
     public List<Book> findNewestBooks(int numBooks) {
-        return bookRepository.findNewestBooks(PageRequest.of(0, numBooks));
+        return bookRepository.findNewestBooks(PageRequest.of(0, numBooks)).stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**

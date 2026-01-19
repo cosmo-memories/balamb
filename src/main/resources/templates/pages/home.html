@@ -19,14 +19,14 @@
     </p>
 
     <hr class="mt-0">
-
+    <div th:if="${latestBooks != null and !latestBooks.isEmpty()}">
     <h3>Latest Books</h3>
     <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-4">
         <div class="col d-flex" th:each="book: ${latestBooks}">
             <div class="card h-100 flex-fill border-2 border-white bg-dark text-white">
                 <div class="row g-0 h-100">
                     <div class="col-4 col-md-3 bg-light border-end border-1">
-                        <img th:src="@{~/uploads/images/{path}(path=${book.image})}" onerror="this.src='/images/PlaceholderCover.png';"
+                        <img th:src="${book.image != null} ? @{~/uploads/images/{path}(path=${book.image})} : @{/images/PlaceholderCover.png}"
                              class="object-fit-cover w-100 h-100">
                     </div>
                     <div class="col d-flex flex-column">
@@ -52,16 +52,18 @@
             </div>
         </div>
     </div>
+    </div>
 
     <hr class="mt-0">
 
+    <div th:if="${randomBooks != null and !randomBooks.isEmpty()}">
     <h3>Random Books</h3>
     <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-4">
         <div class="col d-flex" th:each="book: ${randomBooks}">
             <div class="card h-100 flex-fill border-2 border-white bg-dark text-white">
                 <div class="row g-0 h-100">
                     <div class="col-4 col-md-3 bg-light border-end border-1">
-                        <img th:src="@{~/uploads/images/{path}(path=${book.image})}" onerror="this.src='/images/PlaceholderCover.png';"
+                        <img th:src="${book.image != null} ? @{~/uploads/images/{path}(path=${book.image})} : @{/images/PlaceholderCover.png}"
                              class="object-fit-cover w-100 h-100">
                     </div>
                     <div class="col d-flex flex-column">
@@ -86,6 +88,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 </section>

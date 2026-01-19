@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Controller for all publicly accessible pages.
@@ -45,7 +47,7 @@ public class MainController {
         for (int i=0; i < numBooks; i++) {
             randomBooks.add(bookService.findRandomBook());
         }
-        model.addAttribute("randomBooks", randomBooks);
+        model.addAttribute("randomBooks", randomBooks.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         return "pages/home";
     }
 
