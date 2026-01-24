@@ -4,6 +4,7 @@ import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
 import jakarta.persistence.*;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 

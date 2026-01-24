@@ -34,4 +34,10 @@ public class AuthorRepositoryTests {
         assertEquals("Test Author", result.get().getFullName());
     }
 
+    @Test
+    public void searchAuthorByFirstAndLastName_NoneFound() {
+        Optional<Author> result = authorRepository.findByFirstNameAndLastName("Another", "Author");
+        assertTrue(result.isEmpty());
+    }
+
 }
