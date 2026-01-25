@@ -181,23 +181,23 @@ public class BookService {
             logger.info("Failed title validation");
             valid = false;
         }
-        if (book.getPublisher() != null && !book.getPublisher().isBlank() && !validatePublisher(book.getPublisher())) {
+        if (book.getPublisher() != null && !validatePublisher(book.getPublisher())) {
             logger.info("Failed publisher validation");
             valid = false;
         }
-        if (book.getPubYear() != null && !book.getPubYear().isBlank() && !validatePubYear(book.getPubYear())) {
+        if (book.getPubYear() != null && !validatePubYear(book.getPubYear())) {
             logger.info("Failed year validation");
             valid = false;
         }
-        if (book.getIsbn() != null && !book.getIsbn().isBlank() && !validateIsbn(book.getIsbn())) {
+        if (book.getIsbn() != null && !validateIsbn(book.getIsbn())) {
             logger.info("Failed ISBN validation");
             valid = false;
         }
-        if (book.getSeries() != null && !book.getSeries().isBlank() && !validateSeries(book.getSeries())) {
+        if (book.getSeries() != null && !validateSeries(book.getSeries())) {
             logger.info("Failed series validation");
             valid = false;
         }
-        if (book.getNote() != null && !book.getNote().isBlank() && !validateNote(book.getNote())) {
+        if (book.getNote() != null && !validateNote(book.getNote())) {
             logger.info("Failed note validation");
             valid = false;
         }
@@ -257,10 +257,10 @@ public class BookService {
     public boolean validatePubYear(String pubYear) {
         boolean valid = true;
         try {
-            if (Year.of(parseInt(pubYear)).getValue() > Year.now().getValue()) {
+            if (Year.of(parseInt(pubYear)).getValue() > Year.now().getValue() || Year.of(parseInt(pubYear)).getValue() <= 0) {
                 valid = false;
             }
-        } catch (DateTimeParseException | NullPointerException e) {
+        } catch (Exception e) {
             valid = false;
         }
         return valid;
