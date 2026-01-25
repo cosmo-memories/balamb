@@ -1,4 +1,4 @@
-package cosmo_memories.Balamb.unit;
+package cosmo_memories.Balamb.repository;
 
 import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BookRepositoryTests {
 
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
-    PageRequest pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "added"));
+    private final PageRequest pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "added"));
 
     @BeforeEach
     public void setUp() {

@@ -1,4 +1,4 @@
-package cosmo_memories.Balamb.unit;
+package cosmo_memories.Balamb.repository;
 
 import cosmo_memories.Balamb.model.accounts.LibraryUser;
 import cosmo_memories.Balamb.model.enums.UpdateType;
@@ -25,13 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UpdateRepositoryTests {
 
     @Autowired
-    UpdateRepository updateRepository;
+    private UpdateRepository updateRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    PageRequest pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "created"));
-    LibraryUser user;
+    private final PageRequest pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "created"));
+    private LibraryUser user;
 
     @BeforeEach
     public void setUp() {
@@ -63,7 +63,7 @@ public class UpdateRepositoryTests {
         Update newUpdate = new Update();
         newUpdate.setUpdateType(UpdateType.UPDATE);
         newUpdate.setDescription("Another test.");
-        newUpdate.setAuthor(userRepository.findByEmail("test@test.test").get());
+        newUpdate.setAuthor(user);
         updateRepository.save(newUpdate);
 
         Page<Update> result = updateRepository.findByUpdateType(UpdateType.UPDATE, pageable);

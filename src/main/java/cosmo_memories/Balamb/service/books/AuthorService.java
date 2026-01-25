@@ -25,7 +25,7 @@ public class AuthorService {
      */
     public boolean validateAuthor(String fullName) {
         boolean valid = true;
-        if (!fullName.contains(",")) {
+        if (!fullName.contains(",") || fullName.length() > 90) {
             valid = false;
         } else {
             String[] names = fullName.split(",");

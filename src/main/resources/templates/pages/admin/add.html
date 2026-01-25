@@ -50,7 +50,7 @@
                     <div id="authors-container">
                         <div class="author-field">
                             <input type="text" class="form-control" th:field="*{authors[0]}" placeholder="Lastname, Firstname"
-                                   required pattern=".+,\s*.+" />
+                                   required pattern=".+,\s*.+" maxlength="90" />
                         </div>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                 const div = document.createElement('div');
                 div.className = 'author-field';
                 div.innerHTML = `
-                        <input type="text" class="form-control mt-2" th:field="*{authors[${index}]}" placeholder="Lastname, Firstname" required pattern=".+,\s*.+" />
+                        <input type="text" class="form-control mt-2" th:field="*{authors[${index}]}" placeholder="Lastname, Firstname" required pattern=".+,\s*.+" maxlength="90" />
                         <button type="button" class="btn btn-dark mt-2 remove-author-btn">Remove Author</button>
                 `;
                 container.appendChild(div);

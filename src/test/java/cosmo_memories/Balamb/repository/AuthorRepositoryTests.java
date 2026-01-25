@@ -1,4 +1,4 @@
-package cosmo_memories.Balamb.unit;
+package cosmo_memories.Balamb.repository;
 
 import cosmo_memories.Balamb.model.items.Author;
 import cosmo_memories.Balamb.repository.books.AuthorRepository;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AuthorRepositoryTests {
 
     @Autowired
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
     @BeforeEach
     public void setUp() {

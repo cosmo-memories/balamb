@@ -142,7 +142,7 @@
                                            th:field="*{authors[__${iterStat.index}__]}"
                                            placeholder="Lastname, Firstname"
                                            required
-                                           pattern=".+,\s*.+" />
+                                           pattern=".+,\s*.+" maxlength="90" />
                                     <button type="button"
                                             class="btn btn-dark mt-2 remove-author-btn"
                                             th:if="${iterStat.index > 0}">
@@ -254,7 +254,7 @@
                            name="authors[${index}]"
                            placeholder="Lastname, Firstname"
                            required
-                           pattern=".+,\\s*.+" />
+                           pattern=".+,\\s*.+" maxlength="90" />
                     <button type="button" class="btn btn-dark mt-2 remove-author-btn">
                         Remove Author
                     </button>
