@@ -23,6 +23,15 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Save user. [for testing purposes]
+     * @param user      LibraryUser
+     * @return          LibraryUser
+     */
+    public LibraryUser save(LibraryUser user) {
+        return userRepository.save(user);
+    }
+
+    /**
      * Find User by ID
      * @param id        User ID
      * @return          Optional containing User if found

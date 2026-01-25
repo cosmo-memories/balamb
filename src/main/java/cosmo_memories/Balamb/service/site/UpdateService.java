@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Service class for Update-related functions.
@@ -69,6 +70,24 @@ public class UpdateService {
         update.setResolved(true);
         update.setEdited(LocalDateTime.now());
         updateRepository.save(update);
+    }
+
+    /**
+     * Save update. [for testing purposes]
+     * @param update        Update
+     * @return              Update
+     */
+    public Update save(Update update) {
+        return updateRepository.save(update);
+    }
+
+    /**
+     * Find Update by ID.
+     * @param id            Update ID
+     * @return              Update
+     */
+    public Optional<Update> findById(Long id) {
+        return updateRepository.findById(id);
     }
 
 }
