@@ -26,11 +26,9 @@ public class AuthorServiceTests {
     @Autowired
     private AuthorService authorService;
 
-    private Author author;
-
     @BeforeEach
     public void setUp() {
-        author = new Author("Richard", "Adams");
+        Author author = new Author("Richard", "Adams");
         authorService.save(author);
     }
 

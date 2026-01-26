@@ -122,8 +122,12 @@ public class BookService {
         if (dto.getSubgenre() != null && dto.getSubgenre() != dto.getGenre()) {
             book.setSubgenre(dto.getSubgenre());
         }
-        book.setGenre(dto.getGenre());
-        book.setCategory(dto.getCategory());
+        if (dto.getGenre() != null) {
+            book.setGenre(dto.getGenre());
+        }
+        if (dto.getCategory() != null) {
+            book.setCategory(dto.getCategory());
+        }
         if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
             for (String author : dto.getAuthors()) {
                 String[] names = author.split(",");
@@ -272,7 +276,7 @@ public class BookService {
      * @return          Boolean
      */
     public boolean validateIsbn(String isbn) {
-        return isbn.replace("-", "").length() >= 10 && isbn.replace("-", "").length() <= 13;
+        return isbn.replace("-", "").trim().length() == 10 || isbn.replace("-", "").trim().length() == 13;
     }
 
     /**
@@ -378,9 +382,13 @@ public class BookService {
         if (file.getSize() > 10 * 1024 * 1024) {
             return "File must be smaller than 10MB.";
         }
-        String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
-        List<String> allowed = Arrays.asList("png", "jpg", "jpeg");
-        if (!allowed.contains(extension)) {
+        if (file.getContentType() != null && file.getContentType().contains("/")) {
+            String extension = file.getContentType().split("/")[1];
+            List<String> allowed = Arrays.asList("png", "jpg", "jpeg");
+            if (!allowed.contains(extension)) {
+                return "File type must be PNG or JPG.";
+            }
+        } else {
             return "File type must be PNG or JPG.";
         }
         return "";
