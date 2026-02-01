@@ -52,6 +52,17 @@ public class MainController {
     }
 
     /**
+     * GET mapping for about page.
+     * @param model     Model
+     * @return          About page
+     */
+    @GetMapping("/about")
+    public String getAbout(Model model) {
+        model.addAttribute("activePage", "about");
+        return "pages/about";
+    }
+
+    /**
      * GET mapping for browse records page.
      * @param model         Model
      * @param genre         Search genre
@@ -83,17 +94,6 @@ public class MainController {
             model.addAttribute("bookList", bookService.findAllBooksOnPage(pageNo));
         }
         return "pages/browse";
-    }
-
-    /**
-     * GET mapping for about page.
-     * @param model     Model
-     * @return          About page
-     */
-    @GetMapping("/about")
-    public String getAbout(Model model) {
-        model.addAttribute("activePage", "about");
-        return "pages/about";
     }
 
     /**

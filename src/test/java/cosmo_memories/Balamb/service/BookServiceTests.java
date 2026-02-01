@@ -37,7 +37,7 @@ public class BookServiceTests {
     private BookService bookService;
 
     private BookDTO bookDto;
-    private MultipartFile file = mock(MultipartFile.class);
+    private final MultipartFile file = mock(MultipartFile.class);
 
     @BeforeEach
     public void setUp() {
