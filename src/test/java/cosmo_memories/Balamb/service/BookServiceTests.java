@@ -84,7 +84,7 @@ public class BookServiceTests {
         invalidDto.setAuthors(List.of("Author, Test", "Author 2, Test"));
         invalidDto.setPublisher("");
 
-        assertFalse(bookService.validateBookDto(invalidDto));
+        assertTrue(bookService.validateBookDto(invalidDto));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class BookServiceTests {
         invalidDto.setAuthors(List.of("Author, Test", "Author 2, Test"));
         invalidDto.setPubYear("");
 
-        assertFalse(bookService.validateBookDto(invalidDto));
+        assertTrue(bookService.validateBookDto(invalidDto));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class BookServiceTests {
         invalidDto.setAuthors(List.of("Author, Test", "Author 2, Test"));
         invalidDto.setIsbn("");
 
-        assertFalse(bookService.validateBookDto(invalidDto));
+        assertTrue(bookService.validateBookDto(invalidDto));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class BookServiceTests {
         invalidDto.setAuthors(List.of("Author, Test", "Author 2, Test"));
         invalidDto.setSeries("");
 
-        assertFalse(bookService.validateBookDto(invalidDto));
+        assertTrue(bookService.validateBookDto(invalidDto));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class BookServiceTests {
         invalidDto.setAuthors(List.of("Author, Test", "Author 2, Test"));
         invalidDto.setNote("");
 
-        assertFalse(bookService.validateBookDto(invalidDto));
+        assertTrue(bookService.validateBookDto(invalidDto));
     }
 
     @Test
@@ -228,9 +228,7 @@ public class BookServiceTests {
     }
 
     static Stream<String> invalidPublishers() {
-        return Stream.of("",
-                " ",
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        return Stream.of("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
     @ParameterizedTest
@@ -253,9 +251,7 @@ public class BookServiceTests {
     }
 
     static Stream<String> invalidSeries() {
-        return Stream.of("",
-                " ",
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        return Stream.of("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
     @ParameterizedTest
@@ -278,9 +274,7 @@ public class BookServiceTests {
     }
 
     static Stream<String> invalidNotes() {
-        return Stream.of("",
-                " ",
-                "a".repeat(501));
+        return Stream.of("a".repeat(501));
     }
 
     @ParameterizedTest
@@ -308,8 +302,6 @@ public class BookServiceTests {
                 "-1",
                 "2027",
                 "3000000",
-                "",
-                " ",
                 "text",
                 "two thousand and six");
     }
@@ -334,10 +326,7 @@ public class BookServiceTests {
     }
 
     static Stream<String> invalidISBNs() {
-        return Stream.of("",
-                " ",
-                "             ",
-                "-",
+        return Stream.of("-",
                 "abcde",
                 "978-1-529-15746",
                 "xxxxxxxxx",

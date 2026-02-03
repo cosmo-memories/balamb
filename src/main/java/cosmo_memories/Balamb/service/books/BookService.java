@@ -186,23 +186,23 @@ public class BookService {
             valid = false;
         }
         if (book.getPublisher() != null && !validatePublisher(book.getPublisher())) {
-            logger.info("Failed publisher validation");
+            logger.info("Failed publisher validation: {}", book.getPublisher());
             valid = false;
         }
         if (book.getPubYear() != null && !validatePubYear(book.getPubYear())) {
-            logger.info("Failed year validation");
+            logger.info("Failed year validation: {}", book.getPubYear());
             valid = false;
         }
         if (book.getIsbn() != null && !validateIsbn(book.getIsbn())) {
-            logger.info("Failed ISBN validation");
+            logger.info("Failed ISBN validation: {}", book.getIsbn());
             valid = false;
         }
         if (book.getSeries() != null && !validateSeries(book.getSeries())) {
-            logger.info("Failed series validation");
+            logger.info("Failed series validation: {}", book.getSeries());
             valid = false;
         }
         if (book.getNote() != null && !validateNote(book.getNote())) {
-            logger.info("Failed note validation");
+            logger.info("Failed note validation: {}", book.getNote());
             valid = false;
         }
         if (book.getAuthors() == null || book.getAuthors().isEmpty()) {
@@ -210,7 +210,7 @@ public class BookService {
             valid = false;
         } else for (String fullName : book.getAuthors()) {
             if (!authorService.validateAuthor(fullName)) {
-                logger.info("Failed author validation");
+                logger.info("Failed author validation: {}", fullName);
                 valid = false;
             }
         }
@@ -232,7 +232,7 @@ public class BookService {
      * @return              Boolean
      */
     public boolean validatePublisher(String publisher) {
-        return !publisher.isBlank() && publisher.length() <= 30;
+        return publisher.isBlank() || (!publisher.isBlank() && publisher.length() <= 30);
     }
 
     /**
@@ -241,7 +241,7 @@ public class BookService {
      * @return              Boolean
      */
     public boolean validateSeries(String series) {
-        return !series.isBlank() && series.length() <= 60;
+        return series.isBlank() || (!series.isBlank() && series.length() <= 60);
     }
 
     /**
@@ -250,7 +250,7 @@ public class BookService {
      * @return              Boolean
      */
     public boolean validateNote(String note) {
-        return !note.isBlank() && note.length() <= 500;
+        return note.isBlank() || (!note.isBlank() && note.length() <= 500);
     }
 
     /**
@@ -259,15 +259,17 @@ public class BookService {
      * @return              Boolean
      */
     public boolean validatePubYear(String pubYear) {
-        boolean valid = true;
+        if (pubYear.isBlank()) {
+            return true;
+        }
         try {
             if (Year.of(parseInt(pubYear)).getValue() > Year.now().getValue() || Year.of(parseInt(pubYear)).getValue() <= 0) {
-                valid = false;
+                return false;
             }
         } catch (Exception e) {
-            valid = false;
+            return false;
         }
-        return valid;
+        return true;
     }
 
     /**
@@ -276,7 +278,7 @@ public class BookService {
      * @return          Boolean
      */
     public boolean validateIsbn(String isbn) {
-        return isbn.replace("-", "").trim().length() == 10 || isbn.replace("-", "").trim().length() == 13;
+        return isbn.isBlank() || isbn.replace("-", "").trim().length() == 10 || isbn.replace("-", "").trim().length() == 13;
     }
 
     /**

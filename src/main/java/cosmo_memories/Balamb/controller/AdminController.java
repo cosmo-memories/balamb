@@ -103,8 +103,8 @@ public class AdminController {
         }
         if (bookService.validateBookDto(bookDto)) {
             bookService.saveBookFromDto(bookDto);
+            logger.info("Book added.");
         }
-        logger.info("Book added.");
         return "redirect:/admin/add/book";
     }
 
