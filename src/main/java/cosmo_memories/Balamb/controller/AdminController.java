@@ -206,6 +206,7 @@ public class AdminController {
         }
 
         try {
+            // TODO: extract to services
             String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
             Path directory = Paths.get("uploads", "images");
             Files.createDirectories(directory);

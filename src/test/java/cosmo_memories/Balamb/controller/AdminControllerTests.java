@@ -1083,5 +1083,5 @@ public class AdminControllerTests {
         assertFalse(book.getComplete());
     }
 
-    // TODO: image upload tests
+    // TODO: image upload tests (after refactoring controller)
 }
