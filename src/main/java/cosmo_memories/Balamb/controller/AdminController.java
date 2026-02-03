@@ -160,8 +160,10 @@ public class AdminController {
     public ResponseEntity<?> deleteUpdate(@PathVariable Long id) {
         try {
             updateService.deleteUpdate(id);
+            logger.info("Update deleted.");
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
+            logger.info("Delete update failed.");
             return ResponseEntity.badRequest().body("Delete failed. The selected note may not exist.");
         }
     }
@@ -175,8 +177,10 @@ public class AdminController {
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         try {
             bookService.deleteBook(id);
+            logger.info("Book deleted.");
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
+            logger.info("Delete book failed.");
             return ResponseEntity.badRequest().body("Delete failed. The selected book may not exist.");
         }
     }
@@ -260,14 +264,11 @@ public class AdminController {
             Book book = bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found"));
             bookService.toggleComplete(book);
             return "redirect:/browse/" + id;
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("activePage", "browse");
-            model.addAttribute("book", bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found")));
-            model.addAttribute("bookDto", model.getAttribute("bookDto"));
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("genres", Genre.values());
-            model.addAttribute("error", "Something went wrong.");
-            return "pages/book";
+        } catch (NoSuchElementException e) {
+            logger.info("Toggle book completion failed.");
+            // Book ID doesn't exist
+            // TODO: Handle properly
+            return "redirect:/browse";
         }
     }
 

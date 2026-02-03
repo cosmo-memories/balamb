@@ -527,7 +527,7 @@ public class BookServiceTests {
     @Test
     public void deleteBook_InvalidID_BookNotDeleted() {
         Book book = bookService.saveBookFromDto(bookDto);
-        bookService.deleteBook(book.getId() + 1);
+        assertThrows(IllegalArgumentException.class, () -> bookService.deleteBook(book.getId() + 1));
 
         Optional<Book> result = bookService.findBookById(book.getId());
         assertTrue(result.isPresent());

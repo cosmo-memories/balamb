@@ -358,7 +358,7 @@ public class BookService {
      * @param id            Book ID
      */
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        bookRepository.delete(bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book does not exist!")));
     }
 
     /**
