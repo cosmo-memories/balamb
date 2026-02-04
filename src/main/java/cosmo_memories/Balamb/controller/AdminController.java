@@ -206,14 +206,7 @@ public class AdminController {
         }
 
         try {
-            // TODO: extract to services
-            String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
-            Path directory = Paths.get("uploads", "images");
-            Files.createDirectories(directory);
-            Path filepath = directory.resolve(id + "." + extension);
-            Files.write(filepath, file.getBytes());
-            book.setImage(id + "." + extension);
-            bookService.saveBook(book);
+            bookService.uploadImage(file, book);
         } catch (IOException e) {
             logger.info("Something went wrong uploading a file.");
             model.addAttribute("uploadError", "Something went wrong uploading the file.");

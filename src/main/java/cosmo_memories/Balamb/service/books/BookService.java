@@ -15,6 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeParseException;
@@ -394,6 +398,22 @@ public class BookService {
             return "File type must be PNG or JPG.";
         }
         return "";
+    }
+
+    /**
+     * Upload cover image for given Book.
+     * @param file          Image file
+     * @param book          Book
+     * @throws IOException  IOException
+     */
+    public void uploadImage(MultipartFile file, Book book) throws IOException {
+        String extension = Objects.requireNonNull(file.getContentType()).split("/")[1];
+        Path directory = Paths.get("uploads", "images");
+        Files.createDirectories(directory);
+        Path filepath = directory.resolve(book.getId() + "." + extension);
+        Files.write(filepath, file.getBytes());
+        book.setImage(book.getId() + "." + extension);
+        saveBook(book);
     }
 
     /**
