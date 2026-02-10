@@ -1,0 +1,39 @@
+services:
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    secrets:
+      - DB_PASSWORD
+    environment:
+      - SPRING_PROFILES_ACTIVE=container
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - UPLOAD_DIR=/uploads/images
+    ports:
+      - "8080:8080"
+    volumes:
+      - appdata:/uploads/images
+
+  db:
+    image: 'postgres:14.20-trixie'
+    container_name: db
+    secrets:
+      - DB_PASSWORD
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=/run/secrets/DB_PASSWORD
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+secrets:
+  DB_PASSWORD:
+    file: secrets/DB_PASSWORD.txt
+
+volumes:
+  pgdata:
+  appdata:
