@@ -1,5 +1,6 @@
 package cosmo_memories.Balamb.controller;
 
+import cosmo_memories.Balamb.model.accounts.LibraryUserDetails;
 import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
 import cosmo_memories.Balamb.model.enums.UpdateType;
@@ -9,6 +10,7 @@ import cosmo_memories.Balamb.service.books.BookService;
 import cosmo_memories.Balamb.service.site.UpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +51,11 @@ public class MainController {
         }
         model.addAttribute("randomBooks", randomBooks.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         return "pages/home";
+    }
+
+    @GetMapping("/blocked")
+    public String getBlocked(Model model) {
+        return "pages/blocked";
     }
 
     /**

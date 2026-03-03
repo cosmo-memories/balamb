@@ -9,16 +9,22 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final CustomAuthenticationProvider authenticationProvider;
     private final UserService userService;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
 
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(CustomAuthenticationProvider authenticationProvider, UserService userService, CustomAuthenticationFailureHandler authenticationFailureHandler) {
+        this.authenticationProvider = authenticationProvider;
         this.userService = userService;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
     @Bean
@@ -27,10 +33,10 @@ public class SecurityConfig {
                 .requestCache(cache -> cache.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                        .requestMatchers("/", "/about", "/updates", "/login", "/logout").permitAll()
+                        .requestMatchers("/", "/about", "/updates", "/login", "/logout", "/blocked").permitAll()
                         .requestMatchers("/browse", "/browse/**", "/browse**").permitAll()
                         .requestMatchers("/uploads", "/uploads/**", "/uploads**").permitAll()
-                        .requestMatchers("/h2", "/h2/**", "/h2**").permitAll()
+//                        .requestMatchers("/h2", "/h2/**", "/h2**").permitAll()
                         .requestMatchers("/admin", "/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -41,41 +47,23 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
+                        .failureHandler(authenticationFailureHandler)
                         .successHandler((request, response, authentication) -> {
                             response.sendRedirect("/admin");})
                         .permitAll()
                 )
-                .logout((logout) -> logout.permitAll());
+                .logout((logout) -> logout.permitAll())
+                .authenticationProvider(authenticationProvider);
 
         return http.build();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-//        return config.getAuthenticationManager();
-//    }
-
-
-//    @Bean
-//    public DaoAuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
-//        authProvider.setUserDetailsService(userService);
-//        authProvider.setPasswordEncoder(AppConfig.passwordEncoder());
-//        return authProvider;
-//    }
-
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
-        authProvider.setPasswordEncoder(AppConfig.passwordEncoder());
-        return new ProviderManager(authProvider);
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
+//        authProvider.setPasswordEncoder(AppConfig.passwordEncoder());
+        return new ProviderManager(authenticationProvider);
     }
-
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return userService;
-//    }
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
