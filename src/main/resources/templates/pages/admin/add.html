@@ -48,9 +48,18 @@
                     <label for="authors-container">Author(s)</label> <span class="text-danger">(Required)</span>
                     <span th:if="${#fields.hasErrors('authors[0]')}" th:errors="*{authors[0]}" class="text-danger"></span>
                     <div id="authors-container">
-                        <div class="author-field">
-                            <input type="text" class="form-control" th:field="*{authors[0]}" placeholder="Lastname, Firstname"
-                                   required pattern=".+,\s*.+" maxlength="90" />
+                        <div class="author-field" th:each="author, iterStat : *{authors}">
+                            <input type="text"
+                                   class="form-control mt-2"
+                                   th:field="*{authors[__${iterStat.index}__]}"
+                                   placeholder="Lastname, Firstname"
+                                   required
+                                   pattern=".+,\s*.+" maxlength="90" />
+                            <button type="button"
+                                    class="btn btn-dark mt-2 remove-author-btn"
+                                    th:if="${iterStat.index > 0}">
+                                Remove Author
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -142,8 +151,15 @@
                 const div = document.createElement('div');
                 div.className = 'author-field';
                 div.innerHTML = `
-                        <input type="text" class="form-control mt-2" th:field="*{authors[${index}]}" placeholder="Lastname, Firstname" required pattern=".+,\s*.+" maxlength="90" />
-                        <button type="button" class="btn btn-dark mt-2 remove-author-btn">Remove Author</button>
+                    <input type="text"
+                           class="form-control mt-2"
+                           name="authors[${index}]"
+                           placeholder="Lastname, Firstname"
+                           required
+                           pattern=".+,\\s*.+" maxlength="90" />
+                    <button type="button" class="btn btn-dark mt-2 remove-author-btn">
+                        Remove Author
+                    </button>
                 `;
                 container.appendChild(div);
             });

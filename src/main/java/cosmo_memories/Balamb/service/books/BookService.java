@@ -56,7 +56,6 @@ public class BookService {
         }
         if (!Objects.equals(currentBook.getAuthors(), newBook.getAuthors())) {
             currentBook.setAuthors(newBook.getAuthors());
-            logger.info(currentBook.getAuthors().getFirst().getFirstName());
             logger.info(String.valueOf(currentBook.getAuthors().size()));
         }
         if (!Objects.equals(currentBook.getPublisher(), newBook.getPublisher())) {
@@ -133,6 +132,7 @@ public class BookService {
             book.setCategory(dto.getCategory());
         }
         if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
+            logger.info(String.valueOf(dto.getAuthors().size()));
             for (String author : dto.getAuthors()) {
                 String[] names = author.split(",");
                 Optional<Author> existingAuthor = authorService.findByFullName(names[1].trim(), names[0].trim());
