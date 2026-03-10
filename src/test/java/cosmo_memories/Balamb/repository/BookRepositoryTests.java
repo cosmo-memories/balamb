@@ -41,13 +41,13 @@ public class BookRepositoryTests {
 
     @Test
     public void findByGenre_NoneFound() {
-        Page<Book> result = bookRepository.findByGenreOrSubgenreOrderByAddedDesc(Genre.ART, Genre.ART, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenre(Genre.ART, Genre.ART, pageable);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByGenre_OneFound() {
-        Page<Book> result = bookRepository.findByGenreOrSubgenreOrderByAddedDesc(Genre.FANTASY, Genre.FANTASY, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenre(Genre.FANTASY, Genre.FANTASY, pageable);
         assertTrue(result.hasContent());
         assertEquals(1, result.getContent().size());
         assertSame("Test Book", result.getContent().getFirst().getTitle());
@@ -60,7 +60,7 @@ public class BookRepositoryTests {
         newBook.setGenre(Genre.FANTASY);
         bookRepository.save(newBook);
 
-        Page<Book> result = bookRepository.findByGenreOrSubgenreOrderByAddedDesc(Genre.FANTASY, Genre.FANTASY, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenre(Genre.FANTASY, Genre.FANTASY, pageable);
         assertTrue(result.hasContent());
         assertEquals(2, result.getContent().size());
     }
@@ -72,7 +72,7 @@ public class BookRepositoryTests {
         newBook.setSubgenre(Genre.SCIFI);
         bookRepository.save(newBook);
 
-        Page<Book> result = bookRepository.findByGenreOrSubgenreOrderByAddedDesc(Genre.SCIFI, Genre.SCIFI, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenre(Genre.SCIFI, Genre.SCIFI, pageable);
         assertTrue(result.hasContent());
         assertEquals(1, result.getContent().size());
         assertSame("Test Book 2", result.getContent().getFirst().getTitle());
@@ -85,7 +85,7 @@ public class BookRepositoryTests {
         newBook.setSubgenre(Genre.FANTASY);
         bookRepository.save(newBook);
 
-        Page<Book> result = bookRepository.findByGenreOrSubgenreOrderByAddedDesc(Genre.FANTASY, Genre.FANTASY, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenre(Genre.FANTASY, Genre.FANTASY, pageable);
         assertTrue(result.hasContent());
         assertEquals(2, result.getContent().size());
     }
@@ -98,20 +98,20 @@ public class BookRepositoryTests {
         newBook.setSubgenre(Genre.FANTASY);
         bookRepository.save(newBook);
 
-        Page<Book> result = bookRepository.findByGenreOrSubgenreOrderByAddedDesc(Genre.FANTASY, Genre.FANTASY, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenre(Genre.FANTASY, Genre.FANTASY, pageable);
         assertTrue(result.hasContent());
         assertEquals(2, result.getContent().size());
     }
 
     @Test
     public void findByCategory_NoneFound() {
-        Page<Book> result = bookRepository.findByCategoryOrderByAddedDesc(Category.NONFICTION, pageable);
+        Page<Book> result = bookRepository.findByCategory(Category.NONFICTION, pageable);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByCategory_OneFound() {
-        Page<Book> result = bookRepository.findByCategoryOrderByAddedDesc(Category.FICTION, pageable);
+        Page<Book> result = bookRepository.findByCategory(Category.FICTION, pageable);
         assertTrue(result.hasContent());
         assertEquals(1, result.getContent().size());
         assertSame("Test Book", result.getContent().getFirst().getTitle());
@@ -124,20 +124,20 @@ public class BookRepositoryTests {
         newBook.setCategory(Category.FICTION);
         bookRepository.save(newBook);
 
-        Page<Book> result = bookRepository.findByCategoryOrderByAddedDesc(Category.FICTION, pageable);
+        Page<Book> result = bookRepository.findByCategory(Category.FICTION, pageable);
         assertTrue(result.hasContent());
         assertEquals(2, result.getContent().size());
     }
 
     @Test
     public void findByCategoryAndGenre_NoneFound() {
-        Page<Book> result = bookRepository.findByGenreOrSubgenreAndCategoryOrderByAddedDesc(Genre.ART, Genre.ART, Category.CHILDRENS, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenreAndCategory(Genre.ART, Genre.ART, Category.CHILDRENS, pageable);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByCategoryAndGenre_OneFound() {
-        Page<Book> result = bookRepository.findByGenreOrSubgenreAndCategoryOrderByAddedDesc(Genre.FANTASY, Genre.FANTASY, Category.FICTION, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenreAndCategory(Genre.FANTASY, Genre.FANTASY, Category.FICTION, pageable);
         assertTrue(result.hasContent());
         assertEquals(1, result.getContent().size());
         assertSame("Test Book", result.getContent().getFirst().getTitle());
@@ -152,7 +152,7 @@ public class BookRepositoryTests {
         newBook.setSubgenre(Genre.FANTASY);
         bookRepository.save(newBook);
 
-        Page<Book> result = bookRepository.findByGenreOrSubgenreAndCategoryOrderByAddedDesc(Genre.FANTASY, Genre.FANTASY, Category.FICTION, pageable);
+        Page<Book> result = bookRepository.findByGenreOrSubgenreAndCategory(Genre.FANTASY, Genre.FANTASY, Category.FICTION, pageable);
         assertTrue(result.hasContent());
         assertEquals(2, result.getContent().size());
     }

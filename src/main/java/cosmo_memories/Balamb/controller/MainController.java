@@ -1,8 +1,8 @@
 package cosmo_memories.Balamb.controller;
 
-import cosmo_memories.Balamb.model.accounts.LibraryUserDetails;
 import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
+import cosmo_memories.Balamb.model.enums.SortOrder;
 import cosmo_memories.Balamb.model.enums.UpdateType;
 import cosmo_memories.Balamb.model.items.Book;
 import cosmo_memories.Balamb.model.site.Update;
@@ -10,7 +10,6 @@ import cosmo_memories.Balamb.service.books.BookService;
 import cosmo_memories.Balamb.service.site.UpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,24 +80,28 @@ public class MainController {
     public String getBrowse(Model model,
                             @RequestParam(name = "genre", required = false) Genre genre,
                             @RequestParam(name = "category", required = false) Category category,
-                            @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo) {
+                            @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo,
+                            @RequestParam(name = "sortOrder", required = false, defaultValue = "ADDED") SortOrder sortOrder) {
         model.addAttribute("activePage", "browse");
         model.addAttribute("genres", Genre.values());
         model.addAttribute("categories", Category.values());
+        model.addAttribute("sorts", SortOrder.values());
+        sortOrder = bookService.validateSortOrder(sortOrder);
+        model.addAttribute("sortOrder", sortOrder);
         if (genre != null) {
             if (category != null) {
-                model.addAttribute("bookList", bookService.findBookByGenreAndCategory(genre, category, pageNo));
+                model.addAttribute("bookList", bookService.findBookByGenreAndCategory(genre, category, pageNo, sortOrder));
                 model.addAttribute("genre", genre);
                 model.addAttribute("category", category);
             } else {
-                model.addAttribute("bookList", bookService.findBookByGenre(genre, pageNo));
+                model.addAttribute("bookList", bookService.findBookByGenre(genre, pageNo, sortOrder));
                 model.addAttribute("genre", genre);
             }
         } else if (category != null) {
-            model.addAttribute("bookList", bookService.findBookByCategory(category, pageNo));
+            model.addAttribute("bookList", bookService.findBookByCategory(category, pageNo, sortOrder));
             model.addAttribute("category", category);
         } else {
-            model.addAttribute("bookList", bookService.findAllBooksOnPage(pageNo));
+            model.addAttribute("bookList", bookService.findAllBooksOnPage(pageNo, sortOrder));
         }
         return "pages/browse";
     }

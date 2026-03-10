@@ -18,12 +18,12 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, PagingAndSortingRepository<Book, Long> {
 
-    Page<Book> findByGenreOrSubgenreOrderByAddedDesc(Genre genre, Genre subgenre, Pageable pageable);
+    Page<Book> findByGenreOrSubgenre(Genre genre, Genre subgenre, Pageable pageable);
 
-    Page<Book> findByCategoryOrderByAddedDesc(Category category, Pageable pageable);
+    Page<Book> findByCategory(Category category, Pageable pageable);
 
     @Query("SELECT b FROM Book b WHERE (b.genre = :genre OR b.subgenre = :subgenre) AND b.category = :category ORDER BY b.added DESC")
-    Page<Book> findByGenreOrSubgenreAndCategoryOrderByAddedDesc(Genre genre, Genre subgenre, Category category, Pageable pageable);
+    Page<Book> findByGenreOrSubgenreAndCategory(Genre genre, Genre subgenre, Category category, Pageable pageable);
 
     @Query("SELECT b FROM Book b ORDER BY b.added DESC")
     List<Book> findNewestBooks(Pageable pageable);

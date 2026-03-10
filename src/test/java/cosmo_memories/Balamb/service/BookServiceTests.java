@@ -2,6 +2,7 @@ package cosmo_memories.Balamb.service;
 
 import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
+import cosmo_memories.Balamb.model.enums.SortOrder;
 import cosmo_memories.Balamb.model.items.Author;
 import cosmo_memories.Balamb.model.items.Book;
 import cosmo_memories.Balamb.model.items.BookDTO;
@@ -373,14 +374,14 @@ public class BookServiceTests {
 
     @Test
     public void findAll_NoneInDB() {
-        assertEquals(0, bookService.findAllBooksOnPage(0).getContent().size());
+        assertEquals(0, bookService.findAllBooksOnPage(0, SortOrder.ADDED).getContent().size());
     }
 
     @Test
     public void findAll_OnlyOne() {
         Book book = bookService.saveBookFromDto(bookDto);
-        assertEquals(1, bookService.findAllBooksOnPage(0).getContent().size());
-        assertEquals(book, bookService.findAllBooksOnPage(0).getContent().getFirst());
+        assertEquals(1, bookService.findAllBooksOnPage(0, SortOrder.ADDED).getContent().size());
+        assertEquals(book, bookService.findAllBooksOnPage(0, SortOrder.ADDED).getContent().getFirst());
     }
 
     @Test
@@ -391,9 +392,9 @@ public class BookServiceTests {
         }
         Book book15 = bookService.saveBookFromDto(bookDto);
 
-        assertEquals(15, bookService.findAllBooksOnPage(0).getContent().size());
-        assertEquals(book1, bookService.findAllBooksOnPage(0).getContent().getLast());
-        assertEquals(book15, bookService.findAllBooksOnPage(0).getContent().getFirst());
+        assertEquals(15, bookService.findAllBooksOnPage(0, SortOrder.ADDED).getContent().size());
+        assertEquals(book1, bookService.findAllBooksOnPage(0, SortOrder.ADDED).getContent().getLast());
+        assertEquals(book15, bookService.findAllBooksOnPage(0, SortOrder.ADDED).getContent().getFirst());
     }
 
     @Test
@@ -407,9 +408,9 @@ public class BookServiceTests {
             bookService.saveBookFromDto(bookDto);
         }
 
-        assertEquals(15, bookService.findAllBooksOnPage(1).getContent().size());
-        assertEquals(book1, bookService.findAllBooksOnPage(1).getContent().getLast());
-        assertEquals(book15, bookService.findAllBooksOnPage(1).getContent().getFirst());
+        assertEquals(15, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().size());
+        assertEquals(book1, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().getLast());
+        assertEquals(book15, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().getFirst());
     }
 
     @Test
@@ -420,9 +421,9 @@ public class BookServiceTests {
             bookService.saveBookFromDto(bookDto);
         }
 
-        assertEquals(2, bookService.findAllBooksOnPage(1).getContent().size());
-        assertEquals(book1, bookService.findAllBooksOnPage(1).getContent().getLast());
-        assertEquals(book2, bookService.findAllBooksOnPage(1).getContent().getFirst());
+        assertEquals(2, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().size());
+        assertEquals(book1, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().getLast());
+        assertEquals(book2, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().getFirst());
     }
 
     @Test
@@ -431,7 +432,7 @@ public class BookServiceTests {
             bookService.saveBookFromDto(bookDto);
         }
 
-        assertEquals(0, bookService.findAllBooksOnPage(1).getContent().size());
+        assertEquals(0, bookService.findAllBooksOnPage(1, SortOrder.ADDED).getContent().size());
     }
 
     @Test
@@ -453,14 +454,14 @@ public class BookServiceTests {
 
     @Test
     public void findByGenre_NoneFound() {
-        Page<Book> result = bookService.findBookByGenre(Genre.BIOGRAPHY, 0);
+        Page<Book> result = bookService.findBookByGenre(Genre.BIOGRAPHY, 0, SortOrder.ADDED);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByGenre_OneFoundByMainGenre() {
         Book book = bookService.saveBookFromDto(bookDto);
-        Page<Book> result = bookService.findBookByGenre(Genre.FANTASY, 0);
+        Page<Book> result = bookService.findBookByGenre(Genre.FANTASY, 0, SortOrder.ADDED);
 
         assertEquals(1, result.getContent().size());
         assertEquals(book, result.getContent().getFirst());
@@ -469,7 +470,7 @@ public class BookServiceTests {
     @Test
     public void findByGenre_OneFoundBySubgenre() {
         Book book = bookService.saveBookFromDto(bookDto);
-        Page<Book> result = bookService.findBookByGenre(Genre.SCIFI, 0);
+        Page<Book> result = bookService.findBookByGenre(Genre.SCIFI, 0, SortOrder.ADDED);
 
         assertEquals(1, result.getContent().size());
         assertEquals(book, result.getContent().getFirst());
@@ -477,14 +478,14 @@ public class BookServiceTests {
 
     @Test
     public void findByCategory_NoneFound() {
-        Page<Book> result = bookService.findBookByCategory(Category.GRAPHIC_NOVEL, 0);
+        Page<Book> result = bookService.findBookByCategory(Category.GRAPHIC_NOVEL, 0, SortOrder.ADDED);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByCategory_OneFound() {
         Book book = bookService.saveBookFromDto(bookDto);
-        Page<Book> result = bookService.findBookByCategory(Category.FICTION, 0);
+        Page<Book> result = bookService.findBookByCategory(Category.FICTION, 0, SortOrder.ADDED);
 
         assertEquals(1, result.getContent().size());
         assertEquals(book, result.getContent().getFirst());
@@ -493,14 +494,14 @@ public class BookServiceTests {
     @Test
     public void findByCategoryAndGenre_NoneFound() {
         bookService.saveBookFromDto(bookDto);
-        Page<Book> result = bookService.findBookByGenreAndCategory(Genre.FANTASY, Category.GRAPHIC_NOVEL, 0);
+        Page<Book> result = bookService.findBookByGenreAndCategory(Genre.FANTASY, Category.GRAPHIC_NOVEL, 0, SortOrder.ADDED);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByCategoryAndGenre_OneFoundByMainGenre() {
         Book book = bookService.saveBookFromDto(bookDto);
-        Page<Book> result = bookService.findBookByGenreAndCategory(Genre.FANTASY, Category.FICTION, 0);
+        Page<Book> result = bookService.findBookByGenreAndCategory(Genre.FANTASY, Category.FICTION, 0, SortOrder.ADDED);
 
         assertEquals(1, result.getContent().size());
         assertEquals(book, result.getContent().getFirst());
@@ -509,7 +510,7 @@ public class BookServiceTests {
     @Test
     public void findByCategoryAndGenre_OneFoundBySubgenre() {
         Book book = bookService.saveBookFromDto(bookDto);
-        Page<Book> result = bookService.findBookByGenreAndCategory(Genre.SCIFI, Category.FICTION, 0);
+        Page<Book> result = bookService.findBookByGenreAndCategory(Genre.SCIFI, Category.FICTION, 0, SortOrder.ADDED);
 
         assertEquals(1, result.getContent().size());
         assertEquals(book, result.getContent().getFirst());

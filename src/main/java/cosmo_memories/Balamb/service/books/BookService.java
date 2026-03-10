@@ -2,6 +2,7 @@ package cosmo_memories.Balamb.service.books;
 
 import cosmo_memories.Balamb.model.enums.Category;
 import cosmo_memories.Balamb.model.enums.Genre;
+import cosmo_memories.Balamb.model.enums.SortOrder;
 import cosmo_memories.Balamb.model.items.Author;
 import cosmo_memories.Balamb.model.items.Book;
 import cosmo_memories.Balamb.model.items.BookDTO;
@@ -21,8 +22,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
@@ -282,7 +283,8 @@ public class BookService {
      * @return          Boolean
      */
     public boolean validateIsbn(String isbn) {
-        return isbn.isBlank() || isbn.replace("-", "").trim().length() == 10 || isbn.replace("-", "").trim().length() == 13;
+        int length = isbn.replace("-", "").trim().length();
+        return isbn.isBlank() || length == 10 || length == 13;
     }
 
     /**
@@ -304,8 +306,8 @@ public class BookService {
      * @param pageNo        Page number
      * @return              Page of Books
      */
-    public Page<Book> findAllBooksOnPage(int pageNo) {
-        return bookRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
+    public Page<Book> findAllBooksOnPage(int pageNo, SortOrder sortOrder) {
+        return bookRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortOrder.getDirection(), sortOrder.getSort())));
     }
 
     /**
@@ -332,8 +334,8 @@ public class BookService {
      * @param pageNo        Page number
      * @return              Page of Books
      */
-    public Page<Book> findBookByGenre(Genre genre, int pageNo) {
-        return bookRepository.findByGenreOrSubgenreOrderByAddedDesc(genre, genre, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
+    public Page<Book> findBookByGenre(Genre genre, int pageNo, SortOrder sortOrder) {
+        return bookRepository.findByGenreOrSubgenre(genre, genre, PageRequest.of(pageNo, pageSize, Sort.by(sortOrder.getDirection(), sortOrder.getSort())));
     }
 
     /**
@@ -342,8 +344,8 @@ public class BookService {
      * @param pageNo        Page number
      * @return              Page of Books
      */
-    public Page<Book> findBookByCategory(Category category, int pageNo) {
-        return bookRepository.findByCategoryOrderByAddedDesc(category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
+    public Page<Book> findBookByCategory(Category category, int pageNo, SortOrder sortOrder) {
+        return bookRepository.findByCategory(category, PageRequest.of(pageNo, pageSize, Sort.by(sortOrder.getDirection(), sortOrder.getSort())));
     }
 
     /**
@@ -353,8 +355,16 @@ public class BookService {
      * @param pageNo        Page number
      * @return              Page of Books
      */
-    public Page<Book> findBookByGenreAndCategory(Genre genre, Category category, int pageNo) {
-        return bookRepository.findByGenreOrSubgenreAndCategoryOrderByAddedDesc(genre, genre, category, PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "added")));
+    public Page<Book> findBookByGenreAndCategory(Genre genre, Category category, int pageNo, SortOrder sortOrder) {
+        return bookRepository.findByGenreOrSubgenreAndCategory(genre, genre, category, PageRequest.of(pageNo, pageSize, Sort.by(sortOrder.getDirection(), sortOrder.getSort())));
+    }
+
+    public SortOrder validateSortOrder(SortOrder sortOrder) {
+        List<String> allowedSorts = Arrays.asList("added", "pubYear", "title", "publisher");
+        if (!allowedSorts.contains(sortOrder.getSort())) {
+            sortOrder = SortOrder.ADDED;
+        }
+        return sortOrder;
     }
 
     /**
