@@ -302,6 +302,14 @@ public class BookService {
     }
 
     /**
+     * Return count of all Books in DB.
+     * @return          long
+     */
+    public long countBooks() {
+        return bookRepository.count();
+    }
+
+    /**
      * Find all Books on given Browse page.
      * @param pageNo        Page number
      * @return              Page of Books

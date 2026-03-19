@@ -46,10 +46,19 @@ public class MainController {
         model.addAttribute("latestBooks", bookService.findNewestBooks(numBooks));
         List<Book> randomBooks = new ArrayList<>();
         Book newBook;
-        for (int i=0; randomBooks.size() < numBooks; i++) {
-            newBook = bookService.findRandomBook();
-            if (!randomBooks.contains(newBook)) {
-                randomBooks.add(newBook);
+        if (bookService.countBooks() >= 6) {
+            for (int i=0; randomBooks.size() < numBooks; i++) {
+                newBook = bookService.findRandomBook();
+                if (!randomBooks.contains(newBook)) {
+                    randomBooks.add(newBook);
+                }
+            }
+        } else {
+            for (int i=0; i < numBooks; i++) {
+                newBook = bookService.findRandomBook();
+                if (!randomBooks.contains(newBook)) {
+                    randomBooks.add(newBook);
+                }
             }
         }
         model.addAttribute("randomBooks", randomBooks.stream().filter(Objects::nonNull).collect(Collectors.toList()));
