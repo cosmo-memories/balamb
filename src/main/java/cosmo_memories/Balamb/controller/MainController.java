@@ -45,8 +45,12 @@ public class MainController {
         model.addAttribute("activePage", "home");
         model.addAttribute("latestBooks", bookService.findNewestBooks(numBooks));
         List<Book> randomBooks = new ArrayList<>();
-        for (int i=0; i < numBooks; i++) {
-            randomBooks.add(bookService.findRandomBook());
+        Book newBook;
+        for (int i=0; randomBooks.size() < numBooks; i++) {
+            newBook = bookService.findRandomBook();
+            if (!randomBooks.contains(newBook)) {
+                randomBooks.add(newBook);
+            }
         }
         model.addAttribute("randomBooks", randomBooks.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         return "pages/home";
