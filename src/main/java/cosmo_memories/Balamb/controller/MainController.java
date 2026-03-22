@@ -162,6 +162,8 @@ public class MainController {
         model.addAttribute("bookDto", bookService.mapBookToDto(book.get()));
         model.addAttribute("categories", Category.values());
         model.addAttribute("genres", Genre.values());
+        model.addAttribute("series", bookService.findAllBooksInSeries(book.get().getSeries()));
+        model.addAttribute("random", bookService.listRandomBooksInGenre(book.get().getGenre()));
         return "pages/book";
     }
 

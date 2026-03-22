@@ -302,6 +302,49 @@ public class BookService {
     }
 
     /**
+     * Select a random Book from the database in the given Genre.
+     * @return          Book
+     */
+    public Book findRandomBookInGenre(Genre genre) {
+        int rand = (int)(Math.random() * bookRepository.countByGenreOrSubgenre(genre, genre));
+        Page<Book> book = bookRepository.findByGenreOrSubgenre(genre, genre, PageRequest.of(rand, 1));
+        if (book.hasContent()) {
+            return book.getContent().getFirst();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Return a list of (up to) 10 random Books in the given Genre.
+     * @param genre         Genre
+     * @return              List of Books
+     */
+    public List<Book> listRandomBooksInGenre(Genre genre) {
+        List<Book> randomBooks = new ArrayList<>();
+        Book newBook;
+        for (int i=0; i < 10; i++) {
+            newBook = findRandomBookInGenre(genre);
+            if (!randomBooks.contains(newBook) && newBook != null) {
+                randomBooks.add(newBook);
+            }
+        }
+        return randomBooks;
+    }
+
+    /**
+     * Return list of all Books in given series.
+     * @param series        Series name
+     * @return              List of Books
+     */
+    public List<Book> findAllBooksInSeries(String series) {
+        if (series == null || series.isBlank()) {
+            return new ArrayList<Book>();
+        }
+        return bookRepository.findBySeriesOrderByAddedAsc(series);
+    }
+
+    /**
      * Return count of all Books in DB.
      * @return          long
      */

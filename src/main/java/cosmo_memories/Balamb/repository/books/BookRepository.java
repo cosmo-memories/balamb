@@ -18,6 +18,10 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, PagingAndSortingRepository<Book, Long> {
 
+    long countByGenreOrSubgenre(Genre genre, Genre subgenre);
+
+    List<Book> findBySeriesOrderByAddedAsc(String series);
+
     Page<Book> findByGenreOrSubgenre(Genre genre, Genre subgenre, Pageable pageable);
 
     Page<Book> findByCategory(Category category, Pageable pageable);

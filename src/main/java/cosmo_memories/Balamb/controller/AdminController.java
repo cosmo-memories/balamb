@@ -202,6 +202,8 @@ public class AdminController {
             model.addAttribute("book", book);
             model.addAttribute("bookDto", bookService.mapBookToDto(book));
             model.addAttribute("activePage", "browse");
+            model.addAttribute("series", bookService.findAllBooksInSeries(book.getSeries()));
+            model.addAttribute("random", bookService.listRandomBooksInGenre(book.getGenre()));
             return "pages/book";
         }
 
@@ -212,6 +214,8 @@ public class AdminController {
             model.addAttribute("uploadError", "Something went wrong uploading the file.");
             model.addAttribute("book", book);
             model.addAttribute("activePage", "browse");
+            model.addAttribute("series", bookService.findAllBooksInSeries(book.getSeries()));
+            model.addAttribute("random", bookService.listRandomBooksInGenre(book.getGenre()));
             return "pages/book";
         }
         return "redirect:/browse/" + id;
@@ -228,13 +232,16 @@ public class AdminController {
     @PostMapping("/admin/edit/{id}")
     public String editBook(Model model, @PathVariable long id, @Valid @ModelAttribute("bookDto") BookDTO bookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            Book book = bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found"));
             logger.info("Failed to edit book. Form fields invalid.");
             model.addAttribute("activePage", "browse");
-            model.addAttribute("book", bookService.findBookById(id).orElseThrow(() -> new NoSuchElementException("Book not found")));
+            model.addAttribute("book", book);
             model.addAttribute("bookDto", bookDto);
             model.addAttribute("categories", Category.values());
             model.addAttribute("genres", Genre.values());
             model.addAttribute("formErrors", true);
+            model.addAttribute("series", bookService.findAllBooksInSeries(book.getSeries()));
+            model.addAttribute("random", bookService.listRandomBooksInGenre(book.getGenre()));
             return "pages/book";
         }
         if (bookService.validateBookDto(bookDto)) {
