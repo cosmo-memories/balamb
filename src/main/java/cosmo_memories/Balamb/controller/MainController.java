@@ -1,35 +1,22 @@
 package cosmo_memories.Balamb.controller;
 
-import cosmo_memories.Balamb.model.enums.Category;
-import cosmo_memories.Balamb.model.enums.Genre;
-import cosmo_memories.Balamb.model.enums.SortOrder;
-import cosmo_memories.Balamb.model.enums.UpdateType;
 import cosmo_memories.Balamb.model.items.Book;
-import cosmo_memories.Balamb.model.site.Update;
 import cosmo_memories.Balamb.service.books.BookService;
-import cosmo_memories.Balamb.service.site.UpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Controller for all publicly accessible pages.
+ * Controller for core pages.
  */
 @Controller
 public class MainController {
-
-    @Autowired
-    UpdateService updateService;
 
     @Autowired
     BookService bookService;
@@ -65,6 +52,11 @@ public class MainController {
         return "pages/home";
     }
 
+    /**
+     * GET mapping for login attempts exceeded page.
+     * @param model         Model
+     * @return              Blocked page
+     */
     @GetMapping("/blocked")
     public String getBlocked(Model model) {
         return "pages/blocked";
@@ -79,92 +71,6 @@ public class MainController {
     public String getAbout(Model model) {
         model.addAttribute("activePage", "about");
         return "pages/about";
-    }
-
-    /**
-     * GET mapping for browse records page.
-     * @param model         Model
-     * @param genre         Search genre
-     * @param category      Search category
-     * @param pageNo        Page number
-     * @return              Browse page
-     */
-    @GetMapping("/browse")
-    public String getBrowse(Model model,
-                            @RequestParam(name = "genre", required = false) Genre genre,
-                            @RequestParam(name = "category", required = false) Category category,
-                            @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo,
-                            @RequestParam(name = "sortOrder", required = false, defaultValue = "ADDED") SortOrder sortOrder) {
-        model.addAttribute("activePage", "browse");
-        model.addAttribute("genres", Genre.values());
-        model.addAttribute("categories", Category.values());
-        model.addAttribute("sorts", SortOrder.values());
-        sortOrder = bookService.validateSortOrder(sortOrder);
-        model.addAttribute("sortOrder", sortOrder);
-        if (genre != null) {
-            if (category != null) {
-                model.addAttribute("bookList", bookService.findBookByGenreAndCategory(genre, category, pageNo, sortOrder));
-                model.addAttribute("genre", genre);
-                model.addAttribute("category", category);
-            } else {
-                model.addAttribute("bookList", bookService.findBookByGenre(genre, pageNo, sortOrder));
-                model.addAttribute("genre", genre);
-            }
-        } else if (category != null) {
-            model.addAttribute("bookList", bookService.findBookByCategory(category, pageNo, sortOrder));
-            model.addAttribute("category", category);
-        } else {
-            model.addAttribute("bookList", bookService.findAllBooksOnPage(pageNo, sortOrder));
-        }
-        return "pages/browse";
-    }
-
-    /**
-     * GET mapping for updates page.
-     * @param model     Model
-     * @param type      Search type
-     * @param pageNo    Page number
-     * @return          Updates page
-     */
-    @GetMapping("/updates")
-    public String getUpdates(Model model,
-                             @RequestParam(name = "type", required = false) UpdateType type,
-                             @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo) {
-        model.addAttribute("activePage", "updates");
-        model.addAttribute("updateType", UpdateType.values());
-        model.addAttribute("update", new Update());
-        int pageSize = 10;
-        Page<Update> updates;
-        if (type != null) {
-            updates = updateService.findUpdatesByType(type, pageNo, pageSize);
-            model.addAttribute("type", type);
-        } else {
-            updates = updateService.findAllUpdates(pageNo, pageSize);
-        }
-        model.addAttribute("updateList", updates);
-        return "pages/updates";
-    }
-
-    /**
-     * GET mapping for individual book page.
-     * @param model     Model
-     * @param id        Book ID
-     * @return          Individual book page
-     */
-    @GetMapping("/browse/{id}")
-    public String getBookPage(Model model, @PathVariable Long id) {
-        Optional<Book> book = bookService.findBookById(id);
-        if (book.isEmpty()) {
-            return "redirect:/browse";
-        }
-        model.addAttribute("activePage", "browse");
-        model.addAttribute("book", book.get());
-        model.addAttribute("bookDto", bookService.mapBookToDto(book.get()));
-        model.addAttribute("categories", Category.values());
-        model.addAttribute("genres", Genre.values());
-        model.addAttribute("series", bookService.findAllBooksInSeries(book.get().getSeries()));
-        model.addAttribute("random", bookService.listRandomBooksInGenre(book.get().getGenre()));
-        return "pages/book";
     }
 
 }
