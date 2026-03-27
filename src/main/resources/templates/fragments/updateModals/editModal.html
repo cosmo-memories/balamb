@@ -1,0 +1,26 @@
+<div th:fragment="editModal (post)" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="modal fade" th:id="'editModal' + ${post.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+         data-bs-theme="dark" sec:authorize="isAuthenticated()">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalLabel">Edit update</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/admin/update/{id}(id=${post.id})}" method="post" id="edit-update-form">
+                    <div class="modal-body">
+                        <textarea id="description" type="text" th:text="${post.description}" name="description" placeholder="Text" class="form-control form-control-md"
+                                  minlength="1" maxlength="1000" required></textarea>
+                        <select class="form-select form-select-sm mt-2" id="updateType" name="updateType">
+                            <option th:each="updateType: ${updateType}" th:text="${updateType.getLabel()}" th:value="${updateType}" th:selected="${updateType == post.updateType}"></option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="submit" value="Submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

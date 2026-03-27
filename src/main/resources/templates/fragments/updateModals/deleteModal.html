@@ -1,0 +1,20 @@
+<div th:fragment="deleteModal (postId)" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal fade" th:id="'deleteModal' + ${postId}" data-bs-backdrop="static" data-bs-keyboard="false"
+         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Delete Update</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this update? This cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary py-1 my-1" data-bs-dismiss="modal" type="button">Cancel</button>
+                    <a th:onclick="'deleteUpdate(' + ${postId} + ')'" class="btn btn-primary py-1 my-1">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

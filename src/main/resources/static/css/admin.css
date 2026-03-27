@@ -1,0 +1,12 @@
+#pubYear::-webkit-inner-spin-button,
+#pubYear::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+}
+
+#pubYear {
+    appearance: textfield !important;
+}
+
+input:invalid {
+    border: 2px red;
+}

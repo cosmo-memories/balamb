@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -27,6 +28,9 @@ public class UpdateService {
      * @return              Update
      */
     public Update submitUpdate(Update update) {
+        if (!validateUpdate(update)) {
+            throw new IllegalArgumentException("Update is invalid.");
+        }
         update.setCreated(LocalDateTime.now());
         update.setEdited(LocalDateTime.now());
         return updateRepository.save(update);
@@ -67,7 +71,7 @@ public class UpdateService {
      */
     public void resolveUpdate(Long id) {
         Update update = updateRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Update does not exist!"));
-        update.setResolved(true);
+        update.setResolved(!update.getResolved());
         update.setEdited(LocalDateTime.now());
         updateRepository.save(update);
     }
@@ -90,4 +94,35 @@ public class UpdateService {
         return updateRepository.findById(id);
     }
 
+    /**
+     * Edit an Update.
+     * @param id            Old Update ID
+     * @param newUpdate     New Update data
+     */
+    public void editUpdate(Long id, Update newUpdate) {
+        if (!validateUpdate(newUpdate)) {
+            throw new IllegalArgumentException("New Update is invalid.");
+        }
+        Optional<Update> savedUpdate = updateRepository.findById(id);
+        if (savedUpdate.isEmpty()) {
+            throw new IllegalArgumentException("Update does not exist.");
+        }
+        Update oldUpdate = savedUpdate.get();
+        if (!Objects.equals(oldUpdate.getAuthor().getId(), newUpdate.getAuthor().getId())) {
+            throw new IllegalArgumentException("User is not the author of this Update.");
+        }
+        oldUpdate.setEdited(LocalDateTime.now());
+        oldUpdate.setUpdateType(newUpdate.getUpdateType());
+        oldUpdate.setDescription(newUpdate.getDescription());
+        updateRepository.save(oldUpdate);
+    }
+
+    /**
+     * Validate Update length.
+     * @param update        Update
+     * @return              Boolean result
+     */
+    public boolean validateUpdate(Update update) {
+        return update.getDescription().length() <= 1000;
+    }
 }

@@ -81,9 +81,43 @@ public class UpdateController {
         } else {
             LibraryUser user = userService.findUserById(principal.getId()).orElseThrow(() -> new IllegalArgumentException("User does not exist!"));
             update.setAuthor(user);
-            updateService.submitUpdate(update);
+            try {
+                updateService.submitUpdate(update);
+            } catch (IllegalArgumentException e) {
+                // TODO: be better
+                logger.info("Update submission failed.");
+                model.addAttribute("activePage", "updates");
+                model.addAttribute("update", update);
+                model.addAttribute("updateType", UpdateType.values());
+                model.addAttribute("error", true);
+                model.addAttribute("errorText", "Something went wrong posting your update.");
+                Page<Update> updates = updateService.findAllUpdates(0, 10);
+                model.addAttribute("updateList", updates);
+                return "/pages/updates";
+            }
         }
         return "redirect:/updates";
+    }
+
+    @PostMapping("/admin/update/{id}")
+    public String editUpdate(Model model, @PathVariable Long id, @AuthenticationPrincipal LibraryUserDetails principal,
+                                        @Valid @ModelAttribute("update") Update update, BindingResult bindingResult) {
+        try {
+            LibraryUser user = userService.findUserById(principal.getId()).orElseThrow(() -> new IllegalArgumentException("User does not exist!"));
+            update.setAuthor(user);
+            updateService.editUpdate(id, update);
+            return "redirect:/updates";
+        } catch (IllegalArgumentException e) {
+            logger.info("Update edit failed.");
+            model.addAttribute("activePage", "updates");
+            model.addAttribute("update", new Update());
+            model.addAttribute("updateType", UpdateType.values());
+            model.addAttribute("error", true);
+            model.addAttribute("errorText", "Something went wrong editing your update.");
+            Page<Update> updates = updateService.findAllUpdates(0, 10);
+            model.addAttribute("updateList", updates);
+            return "/pages/updates";
+        }
     }
 
     /**
@@ -91,7 +125,7 @@ public class UpdateController {
      * @param id        Update ID
      * @return          ResponseEntity
      */
-    @PostMapping("/admin/update/{id}")
+    @PostMapping("/admin/update/resolve/{id}")
     public ResponseEntity<?> resolveUpdate(@PathVariable Long id) {
         try {
             updateService.resolveUpdate(id);

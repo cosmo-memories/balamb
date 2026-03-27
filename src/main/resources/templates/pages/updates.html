@@ -17,6 +17,7 @@
             </p>
         </div>
     </div>
+
     <hr class="mt-0">
 
     <div class="container my-4" style="max-width: 600px">
@@ -40,9 +41,6 @@
         </form>
     </div>
 
-
-
-
     <hr class="mt-0">
 
     <p th:if="${error}" th:text="${errorText}"></p>
@@ -59,19 +57,31 @@
                         <div class="d-flex">
                             <h5 class="mb-1" th:text="${post.updateType.getLabel()}"
                             th:classappend="${post.updateType.getLabel() == 'Update' || post.updateType.getLabel() == 'News'} ? text-success : ''"></h5>
-                            <span th:if="${post.resolved}" class="h5 mx-2 text-info">(Resolved)</span>
+                            <span th:if="${(post.updateType.getLabel() == 'To Do' || post.updateType.getLabel() == 'Known Issue') && post.resolved}" class="h5 mx-2 text-info">(Resolved)</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <small class="text-white mx-3" th:text="${#temporals.format(post.created, 'dd-MM-yyyy')}"></small>
                             <div th:if="${(post.updateType.getLabel() == 'To Do' || post.updateType.getLabel() == 'Known Issue') && post.resolved == false}">
                                 <a sec:authorize="isAuthenticated()" th:onclick="'resolveUpdate(' + ${post.id} + ')'"
-                                   class="btn btn-light text-black btn-sm mx-2">Resolve</a>
+                                   class="btn btn-light text-black btn-sm">Resolve</a>
                             </div>
-                            <a sec:authorize="isAuthenticated()" th:onclick="'deleteUpdate(' + ${post.id} + ')'" class="btn btn-light text-black btn-sm">Delete</a>
+
+                            <div th:if="${(post.updateType.getLabel() == 'To Do' || post.updateType.getLabel() == 'Known Issue') && post.resolved == true}">
+                                <a sec:authorize="isAuthenticated()" th:onclick="'resolveUpdate(' + ${post.id} + ')'"
+                                   class="btn btn-light text-black btn-sm">Unresolve</a>
+                            </div>
+
+                            <a sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id == post.author.id}" data-bs-toggle="modal" th:data-bs-target="'#editModal' + ${post.id}"
+                               class="btn btn-light text-black btn-sm mx-2">Edit</a>
+                            <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id == post.author.id}" th:replace="~{fragments/updateModals/editModal :: editModal (post = ${post})}"></div>
+
+                            <a sec:authorize="isAuthenticated()" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${post.id}"
+                               class="btn btn-light text-black btn-sm">Delete</a>
+                            <div sec:authorize="isAuthenticated()" th:replace="~{fragments/updateModals/deleteModal :: deleteModal (postId = ${post.id})}"></div>
                         </div>
                     </div>
-                    <small th:text="${post.description}" th:if="${post.resolved}" style="overflow-wrap: anywhere; text-decoration: line-through;"></small>
-                    <small th:text="${post.description}" th:unless="${post.resolved}" style="overflow-wrap: anywhere;" ></small>
+                    <small th:text="${post.description}" th:if="${(post.updateType.getLabel() == 'To Do' || post.updateType.getLabel() == 'Known Issue') && post.resolved}" style="overflow-wrap: anywhere; text-decoration: line-through;"></small>
+                    <small th:text="${post.description}" th:unless="${(post.updateType.getLabel() == 'To Do' || post.updateType.getLabel() == 'Known Issue') && post.resolved}" style="overflow-wrap: anywhere;"></small>
                 </div>
             </div>
         </div>
@@ -98,70 +108,8 @@
         </ul>
     </div>
 
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-         data-bs-theme="dark" sec:authorize="isAuthenticated()">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalLabel">Post new update</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form th:action="@{/admin/update}" th:object="${update}" method="post" id="update-form">
-                    <div class="modal-body">
-                        <textarea id="description" type="text" th:field="*{description}" placeholder="Text" class="form-control form-control-md"
-                                  minlength="1" maxlength="1000" required> </textarea>
-                        <select class="form-select form-select-sm mt-2" id="updateType" th:field="*{updateType}">
-                            <option th:each="updateType: ${updateType}" th:text="${updateType.getLabel()}" th:value="${updateType}"></option>
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
-                        <button class="btn btn-secondary" type="submit" value="Submit">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function deleteUpdate(id) {
-            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-            fetch("/admin/update/" + id, {
-                method: "DELETE",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    [header]: token
-                }
-            }).then(response => {
-                if (response.ok) {
-                    location.reload();
-                } else {
-                    alert("Something went wrong!")
-                }
-            });
-        }
-
-        function resolveUpdate(id) {
-            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-            fetch("/admin/update/" + id, {
-                method: "POST",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    [header]: token
-                }
-            }).then(response => {
-                if (response.ok) {
-                    location.reload();
-                } else {
-                    alert("Something went wrong!")
-                }
-            });
-        }
-    </script>
+    <script type="text/javascript" th:src="@{/js/update.js}"></script>
+    <div th:replace="~{fragments/updateModals/updateModal :: updateModal}"></div>
 </section>
 
 </body>
