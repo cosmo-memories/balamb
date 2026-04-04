@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -157,6 +158,19 @@ public class UpdateServiceTests {
     }
 
     @Test
+    public void unresolveUpdate_Successful() {
+        Update testUpdate = new Update("Test 1", UpdateType.UPDATE);
+        testUpdate.setAuthor(user);
+        testUpdate = updateService.submitUpdate(testUpdate);
+
+        updateService.resolveUpdate(testUpdate.getId());
+        updateService.resolveUpdate(testUpdate.getId());
+
+        Optional<Update> unresolved = updateService.findById(testUpdate.getId());
+        assertTrue(unresolved.isPresent() && !unresolved.get().getResolved());
+    }
+
+    @Test
     public void resolveUpdate_UpdateDoesNotExist() {
         Update testUpdate = new Update("Test 1", UpdateType.UPDATE);
         testUpdate.setAuthor(user);
@@ -164,6 +178,46 @@ public class UpdateServiceTests {
 
         Update finalTestUpdate = testUpdate;
         assertThrows(IllegalArgumentException.class, () -> updateService.resolveUpdate(finalTestUpdate.getId() + 1));
+    }
+
+    @Test
+    public void editUpdate_Success() {
+        Update testUpdate = new Update("Test 1", UpdateType.UPDATE);
+        testUpdate.setAuthor(user);
+        testUpdate = updateService.submitUpdate(testUpdate);
+        long id = testUpdate.getId();
+
+        Update newUpdate = new Update("Test 2", UpdateType.NEWS);
+        newUpdate.setAuthor(user);
+        updateService.editUpdate(id, newUpdate);
+
+        Optional<Update> updated = updateService.findById(id);
+        assertTrue(updated.isPresent() && updated.get().getUpdateType() == UpdateType.NEWS && Objects.equals(updated.get().getDescription(), "Test 2"));
+    }
+
+    @Test
+    public void editUpdate_InvalidUpdate() {
+        Update testUpdate = new Update("Test 1", UpdateType.UPDATE);
+        testUpdate.setAuthor(user);
+        testUpdate = updateService.submitUpdate(testUpdate);
+        long id = testUpdate.getId();
+
+        Update newUpdate = new Update("a".repeat(1500), UpdateType.NEWS);
+        newUpdate.setAuthor(user);
+        assertThrows(IllegalArgumentException.class, () -> updateService.editUpdate(id, newUpdate));
+    }
+
+    @Test
+    public void editUpdate_InvalidUser() {
+        Update testUpdate = new Update("Test 1", UpdateType.UPDATE);
+        testUpdate.setAuthor(user);
+        testUpdate = updateService.submitUpdate(testUpdate);
+        long id = testUpdate.getId();
+
+        user = userService.save(new LibraryUser("Test 2", "User 2", "test@test.test", "testPassword"));
+        Update newUpdate = new Update("", UpdateType.NEWS);
+        newUpdate.setAuthor(user);
+        assertThrows(IllegalArgumentException.class, () -> updateService.editUpdate(id, newUpdate));
     }
 
 

@@ -164,7 +164,7 @@ public class AdminControllerTests {
                         .param("pubYear", "1999")
                         .param("publisher", "Cosmo Memories"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/admin/add/book"));
+                .andExpect(redirectedUrlPattern("/browse/**"));
 
         Book book = bookService.findNewestBooks(1).getFirst();
         assertThat(book.getTitle(), equalTo("Test Book A"));
@@ -420,7 +420,7 @@ public class AdminControllerTests {
         Update update = updateService.findAllUpdates(0, 1).getContent().getFirst();
         assertFalse(update.getResolved());
 
-        mockMvc.perform(post("/admin/update/" + update.getId()))
+        mockMvc.perform(post("/admin/update/resolve" + update.getId()))
                 .andExpect(status().is4xxClientError());
 
         update = updateService.findAllUpdates(0, 1).getContent().getFirst();
@@ -437,7 +437,7 @@ public class AdminControllerTests {
         Update update = updateService.findAllUpdates(0, 1).getContent().getFirst();
         assertFalse(update.getResolved());
 
-        mockMvc.perform(post("/admin/update/" + update.getId()).with(user(userDetails)).with(csrf()));
+        mockMvc.perform(post("/admin/update/resolve/" + update.getId()).with(user(userDetails)).with(csrf()));
 
         update = updateService.findAllUpdates(0, 1).getContent().getFirst();
         assertTrue(update.getResolved());
@@ -453,7 +453,7 @@ public class AdminControllerTests {
         Update update = updateService.findAllUpdates(0, 1).getContent().getFirst();
         assertFalse(update.getResolved());
 
-        mockMvc.perform(post("/admin/update/" + update.getId() + 1).with(user(userDetails)).with(csrf()))
+        mockMvc.perform(post("/admin/update/resolve/" + update.getId() + 1).with(user(userDetails)).with(csrf()))
                 .andExpect(status().is4xxClientError());
 
         update = updateService.findAllUpdates(0, 1).getContent().getFirst();

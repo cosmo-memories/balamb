@@ -560,6 +560,61 @@ public class BookServiceTests {
     }
 
     @Test
+    public void findSeries_OnlyOneInDB() {
+        Book book = bookService.saveBookFromDto(bookDto);
+        List<Book> result = bookService.findAllBooksInSeries("Test Series");
+        assertEquals(1, result.size());
+        assertEquals(book, result.getFirst());
+    }
+
+    @Test
+    public void findSeries_ManyInDB() {
+        for (int i = 1; i <= 10; i++) {
+            bookService.saveBookFromDto(bookDto);
+        }
+        bookDto.setSeries("Test 2");
+        for (int i = 1; i <= 10; i++) {
+            bookService.saveBookFromDto(bookDto);
+        }
+        List<Book> result = bookService.findAllBooksInSeries("Test Series");
+        assertEquals(10, result.size());
+        for (Book book : result) {
+            assertEquals("Test Series", book.getSeries());
+        }
+    }
+
+    @Test
+    public void findGenre_NoneInDB() {
+        List<Book> result = bookService.listRandomBooksInGenre(Genre.CRIME);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findGenre_OnlyOneInDB() {
+        Book book = bookService.saveBookFromDto(bookDto);
+        List<Book> result = bookService.listRandomBooksInGenre(Genre.FANTASY);
+        assertEquals(1, result.size());
+        assertEquals(book, result.getFirst());
+    }
+
+    @Test
+    public void findGenre_ManyInDB() {
+        for (int i = 1; i <= 10; i++) {
+            bookService.saveBookFromDto(bookDto);
+        }
+        bookDto.setGenre(Genre.ART);
+        bookDto.setSubgenre(Genre.CRIME);
+        for (int i = 1; i <= 10; i++) {
+            bookService.saveBookFromDto(bookDto);
+        }
+        List<Book> result = bookService.listRandomBooksInGenre(Genre.FANTASY);
+        assertTrue(result.size() <= 10);
+        for (Book book : result) {
+            assertEquals(Genre.FANTASY, book.getGenre());
+        }
+    }
+
+    @Test
     public void toggleComplete_On() {
         Book book = bookService.saveBookFromDto(bookDto);
         assertFalse(book.getComplete());
