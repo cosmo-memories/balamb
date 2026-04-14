@@ -1,0 +1,51 @@
+<nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary fixed-top" data-bs-theme="dark" th:fragment="navbar"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand fw-bold me-3" href="/">BALAMB GARDEN</a>
+            <span class="navbar-text small">1.0.0</span>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="/" class="nav-link" th:classappend="${activePage == 'home'} ? ' active fw-bold' : ''">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/browse" class="nav-link" th:classappend="${activePage == 'browse'} ? ' active fw-bold' : ''">Browse</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/about" class="nav-link" th:classappend="${activePage == 'about'} ? ' active fw-bold' : ''">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/updates" class="nav-link" th:classappend="${activePage == 'updates'} ? ' active fw-bold' : ''">Updates</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/login" class="nav-link" sec:authorize="isAnonymous()">Admin</a>
+                </li>
+
+                <li class="nav-item dropdown d-flex align-items-center" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                       th:text="${#authentication.principal.firstName} + ' ' + ${#authentication.principal.lastName}">User Name</a>
+                    <img th:src="@{/images/PlaceholderIcon.png}" width="32" height="32" class="rounded-circle ms-2" alt="Admin Icon">
+                    <ul class="dropdown-menu dropdown-menu-dark shadow">
+                        <li><a class="dropdown-item" href="/admin/add/book">Add Book</a></li>
+                        <li><a class="dropdown-item" href="/admin">Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                                Sign Out
+                            </a>
+                            <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
