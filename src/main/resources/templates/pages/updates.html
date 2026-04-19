@@ -7,20 +7,8 @@
 <body>
 
 <section layout:fragment="content">
-    <div class="row d-flex justify-content-between">
-        <div class="col-auto">
-            <h1 class="text-primary">Project Updates</h1>
-        </div>
-        <div class="col-auto">
-            <p sec:authorize="isAuthenticated()">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateModal">Add Update</button>
-            </p>
-        </div>
-    </div>
 
-    <hr class="mt-0">
-
-    <div class="container my-4" style="max-width: 600px">
+    <div class="container mt-3 mb-4" style="max-width: 600px">
         <form action="#" th:action="@{/updates}" method="get" id="filterForm">
             <div class="d-flex flex-wrap align-items-center gap-2">
                 <div class="flex-grow-1">
@@ -42,6 +30,10 @@
     </div>
 
     <hr class="mt-0">
+
+    <p class="container d-flex justify-content-center" sec:authorize="isAuthenticated()">
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateModal">New Update</button>
+    </p>
 
     <p th:if="${error}" th:text="${errorText}"></p>
 

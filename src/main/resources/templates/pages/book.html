@@ -3,133 +3,146 @@
       xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layouts/default}">
 <head>
-    <title>View Record</title>
+    <title>View Record - [[${book.title}]]</title>
     <link th:href="@{/css/admin.css}" rel="stylesheet" />
+    <style>
+        .book-cover-container {
+            margin: 0 auto;
+            background-color: #1a1a1a;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 0px) {
+            .book-cover-container { width: 200px; height: 300px; }
+        }
+        @media (min-width: 768px) {
+            .book-cover-container { width: 240px; height: 360px; }
+        }
+        @media (min-width: 1200px) {
+            .book-cover-container { width: 260px; height: 390px; }
+        }
+
+        .book-cover-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .metadata-label {
+            font-weight: bold;
+            min-width: 130px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
 
 <section layout:fragment="content">
-    <div class="row d-flex justify-content-between">
-        <div class="col-auto">
-            <h1 class="text-primary">Browse Records</h1>
-        </div>
-    </div>
-    <hr class="mt-0">
+    <div class="container-fluid py-4 px-4 px-md-5">
+        <div class="row g-4 mt-2">
+            <div class="col-12 col-lg-8">
+                <div class="card mb-4 border-0 bg-transparent">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-auto">
+                            <div class="book-cover-container shadow-lg border border-white border-2">
+                                <img th:src="@{~/uploads/images/{path}(path=${book.image})}"
+                                     onerror="this.src='/images/PlaceholderCover.png';"
+                                     alt="Book Cover">
+                            </div>
+                        </div>
 
-    <div class="card mb-3 bg-dark border-0">
-        <div class="row g-0">
-            <div class="col-lg-2">
-                <img th:src="@{~/uploads/images/{path}(path=${book.image})}"
-                     onerror="this.src='/images/PlaceholderCover.png';" class="object-fit-cover w-100 h-100 border border-white border-2">
-            </div>
-            <div class="col-lg-10">
-                <div class="card-body bg-dark" style="height: 100%">
-                    <h5 class="card-title h2 text-white" th:text="${book.title}"></h5>
-                    <p class="card-text text-secondary" th:if="${book.series != null}">
-                        <b>Series: <span th:text="${book.series}"></span></b>
-                    </p>
-                    <p class="card-text text-secondary">
-                        <b>
-                            Author(s):
-                            <span th:each="author, iterStat: ${book.authors}">
-                                <b th:text="${author.firstName} + ' ' + ${author.lastName}"></b><span class="text-secondary" th:if="${iterStat.index != book.authors.size() - 1}">, </span>
-                            </span>
-                        </b>
-                    </p>
-                    <hr class="mt-0" style="width: 50%">
-                    <p class="card-text text-secondary">
-                        Genre(s): <span th:text="${book.genre.getLabel()}"></span><span th:if="${book.subgenre != null}" th:text="${', ' + book.subgenre.label}"></span>
-                    </p>
-                    <p class="card-text text-secondary">
-                        Category: <span th:text="${book.category.getLabel()}"></span>
-                    </p>
-                    <p class="card-text text-secondary">
-                        Publisher: <span th:text="${book.publisher}"></span><span th:if="${book.publisher == null}" th:text="Unknown"></span>
-                    </p>
-                    <p class="card-text text-secondary">
-                        Publication Year: <span th:text="${book.pubYear}"></span><span th:if="${book.pubYear == null}" th:text="Unknown"></span>
-                    </p>
-                    <p class="card-text text-secondary">
-                        ISBN: <span th:text="${book.isbn}"></span><span th:if="${book.isbn == null}" th:text="Unknown"></span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="col-12 col-md">
+                            <div class="card-body p-0 text-white">
+                                <h1 class="display-5 fw-bold mb-1" th:text="${book.title}"></h1>
+                                <p class="h4 text-secondary mb-3" th:if="${book.series != null}">
+                                    <span th:text="${book.series}"></span>
+                                </p>
 
-    <hr class="mt-0">
+                                <p class="h5 mb-4">
+                                    By
+                                    <span th:each="author, iterStat: ${book.authors}">
+                                        <span class="text-info" th:text="${author.firstName} + ' ' + ${author.lastName}"></span><span th:if="${!iterStat.last}">, </span>
+                                    </span>
+                                </p>
 
-    <div>
-        <p class="card-text">
-            <b>Notes:</b> <span th:text="${book.note}"></span><span th:if="${book.note == null}" th:text="None"></span>
-        </p>
-        <p class="card-text">
-            <b>Status:</b> <span th:text="Unread" th:if="${!book.complete}"></span><span th:text="Read" th:if="${book.complete}"></span>
-        </p>
-    </div>
-
-    <hr>
-
-    <div class="container">
-        <div class="row row-cols-1 row-cols-md-2">
-            <div class="col my-2" th:if="${series.size() > 0}">
-                <h5 class="h3 text-white text-center">More from this series:</h5>
-                <div th:replace="~{fragments/carousel :: carousel(bookList = ${series}, carouselId = 'seriesCar')}"></div>
-            </div>
-            <div class="col my-2" th:if="${random.size() > 0}">
-                <h5 class="h3 text-white text-center">More from this genre:</h5>
-                <div th:replace="~{fragments/carousel :: carousel(bookList = ${random}, carouselId = 'randomCar')}"></div>
-            </div>
-        </div>
-    </div>
-
-    <hr>
-
-    <div sec:authorize="isAuthenticated()" id="admin-controls">
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editPanel"
-                    aria-expanded="false" aria-controls="editPanel" id="toggle" th:text="${formHasErrors != null || uploadError != null ? 'Hide' : 'Edit Book'}">
-                Edit Book
-            </button>
-        </div>
-
-        <div class="collapse" id="editPanel" th:classappend="${formErrors != null || uploadError != null ? ' show' : ''}">
-            <hr>
-
-            <div class="d-flex justify-content-center">
-                <form method="post" th:action="@{/admin/update/{id}/complete(id=${book.id})}">
-                    <button type="submit" class="btn btn-secondary py-1 my-1" th:if="${!book.complete}">Mark As Read</button>
-                    <button type="submit" class="btn btn-secondary py-1 my-1" th:if="${book.complete}">Mark As Unread</button>
-                </form>
-            </div>
-
-            <hr>
-
-            <div class="d-flex flex-column justify-content-center align-items-center mx-auto" style="max-width: 500px;">
-                <div class="mb-2">
-                    Add or update cover:
-                </div>
-                <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
-                    <div class="input-group">
-                        <input type="file" class="form-control" name="uploadedFile" id="file-upload">
-                        <button class="btn btn-outline-secondary" type="submit">Upload</button>
+                                <div class="row gx-5 gy-2">
+                                    <p class="mb-1"><span class="metadata-label">Genre(s):</span> <span th:text="${book.genre.getLabel()}"></span><span th:if="${book.subgenre != null}" th:text="${', ' + book.subgenre.label}"></span></p>
+                                    <p class="mb-1"><span class="metadata-label">Category:</span> <span th:text="${book.category.getLabel()}"></span></p>
+                                    <p class="mb-1"><span class="metadata-label">Publisher:</span> <span th:text="${book.publisher ?: 'Unknown'}"></span></p>
+                                    <p class="mb-1"><span class="metadata-label">Pub. Year:</span> <span th:text="${book.pubYear ?: 'Unknown'}"></span></p>
+                                    <p class="mb-1"><span class="metadata-label">ISBN:</span> <span th:text="${book.isbn ?: 'Unknown'}"></span></p>
+                                    <p class="mb-1">
+                                        <span class="metadata-label">Status:</span>
+                                        <span th:class="${book.complete ? 'text-success' : 'text-warning'}"
+                                              th:text="${book.complete ? 'Read' : 'Unread'}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>
-                <span th:if="${uploadError != null}" th:text="${uploadError}"></span>
+                </div>
+
+                <div class="my-4 text-white">
+                    <b class="mb-3 d-block">Notes:</b>
+                    <span th:text="${book.note}"></span><span th:if="${book.note == null}" th:text="None."></span>
+                </div>
             </div>
 
-            <hr>
+            <div class="col-12 col-lg-4">
+                <div th:if="${series.size() > 0}" class="mb-5">
+                    <h5 class="h5 text-white text-center mb-3">More from this series</h5>
+                    <div th:replace="~{fragments/carousel :: carousel(bookList = ${series}, carouselId = 'seriesCar')}"></div>
+                </div>
 
-            <form action="#" th:action="@{/admin/edit/{id}(id=${book.id})}" th:object="${bookDto}" method="post">
-                <div th:replace="~{fragments/bookForm :: bookForm}"></div>
-            </form>
+                <div th:if="${random.size() > 0}">
+                    <h5 class="h5 text-white text-center mb-3">More from this genre</h5>
+                    <div th:replace="~{fragments/carousel :: carousel(bookList = ${random}, carouselId = 'randomCar')}"></div>
+                </div>
+            </div>
+        </div>
 
-            <hr>
+        <hr>
 
+        <div sec:authorize="isAuthenticated()" id="admin-controls" class="pb-5">
             <div class="d-flex justify-content-center">
-                <a data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${book.id}" class="btn btn-secondary py-1 my-1">
-                    Delete Book
-                </a>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editPanel"
+                        aria-expanded="false" aria-controls="editPanel" id="toggle" th:text="${formHasErrors != null || uploadError != null ? 'Hide' : 'Edit Book'}">
+                    Edit Book
+                </button>
+            </div>
+
+            <div class="collapse" id="editPanel" th:classappend="${formErrors != null || uploadError != null ? ' show' : ''}">
+
+                <div class="d-flex justify-content-center">
+                    <form method="post" th:action="@{/admin/update/{id}/complete(id=${book.id})}">
+                        <button type="submit" class="btn btn-secondary py-1 my-1" th:if="${!book.complete}">Mark As Read</button>
+                        <button type="submit" class="btn btn-secondary py-1 my-1" th:if="${book.complete}">Mark As Unread</button>
+                    </form>
+                </div>
+
+                <div class="d-flex flex-column justify-content-center align-items-center mx-auto" style="max-width: 500px;">
+                    <div class="mb-2 text-white">Add or update cover:</div>
+                    <form method="post" th:action="@{/admin/add/image/{id}(id=${book.id})}" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <input type="file" class="form-control" name="uploadedFile" id="file-upload">
+                            <button class="btn btn-outline-secondary" type="submit">Upload</button>
+                        </div>
+                    </form>
+                    <span class="text-danger" th:if="${uploadError != null}" th:text="${uploadError}"></span>
+                </div>
+
+                <form action="#" th:action="@{/admin/edit/{id}(id=${book.id})}" th:object="${bookDto}" method="post">
+                    <div th:replace="~{fragments/bookForm :: bookForm}"></div>
+                </form>
+                <hr>
+                <div class="d-flex justify-content-center">
+                    <a data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${book.id}" class="btn btn-secondary py-1 my-1">
+                        Delete Book
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -137,7 +150,6 @@
     <script type="text/javascript" th:src="@{/js/admin.js}"></script>
     <script type="text/javascript" th:src="@{/js/book.js}"></script>
     <div th:replace="~{fragments/bookModals/deleteModal :: deleteModal}"></div>
-
 </section>
 
 </body>

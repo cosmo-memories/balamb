@@ -7,25 +7,25 @@
 <body>
 
 <section layout:fragment="content">
-    <div class="row d-flex justify-content-between">
-        <div class="col-auto">
-            <h1 class="text-primary">Login</h1>
+    <div class="d-flex flex-column align-items-center">
+        <div class="mt-2 mb-1" th:if="${param.error}">
+            Invalid username and password. Please try again.
+        </div>
+        <div class="mt-2 mb-1" th:if="${param.logout}">
+            You have been logged out. You may log in again below.
+        </div>
+        <div class="mt-2">
+            <form th:action="@{/login}" method="post">
+                <label for="emailInput">Email</label>
+                <input type="text" class="form-control" id="emailInput" name="email">
+                <label for="passwordInput">Password</label>
+                <input type="password" class="form-control" id="passwordInput" name="password">
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-m mt-2">Sign In</button>
+                </div>
+            </form>
         </div>
     </div>
-    <hr class="mt-0">
-    <div th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div th:if="${param.logout}">
-        You have been logged out.
-    </div>
-    <p>
-        <form th:action="@{/login}" method="post">
-            <div><label> User Name : <input type="text" name="email"/> </label></div>
-            <div><label> Password: <input type="password" name="password"/> </label></div>
-            <div><input type="submit" value="Sign In"/></div>
-        </form>
-    </p>
 </section>
 
 </body>

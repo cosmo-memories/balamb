@@ -6,15 +6,7 @@
 <body>
 
 <section layout:fragment="content">
-    <div class="row d-flex justify-content-between">
-        <div class="col-auto">
-            <h1 class="text-primary">Browse Records</h1>
-        </div>
-    </div>
-
-    <hr class="mt-0">
-
-    <div class="container my-4" style="max-width: 800px;">
+    <div class="container mt-3 mb-4" style="max-width: 800px;">
         <form action="#" th:action="@{/browse}" method="get" id="filterForm">
             <div class="d-flex flex-wrap align-items-center gap-2"> Sort By:
                 <div class="d-flex gap-2 flex-grow-1">

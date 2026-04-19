@@ -1,7 +1,7 @@
 <div th:fragment="carouselCard (book)" xmlns:th="http://www.w3.org/1999/xhtml">
 
     <div class="card border-2 border-white bg-dark text-white"
-         style="height: 250px; overflow: hidden;">
+         style="height: 150px; overflow: hidden;">
         <div class="row g-0 h-100">
             <div class="col-4 col-md-3 bg-light border-end border-1" style="height: 100%;">
                 <img th:src="${book.image != null} ? @{~/uploads/images/{path}(path=${book.image})} : @{/images/PlaceholderCover.png}"
@@ -15,7 +15,6 @@
                     <a th:href="@{/browse/{id}(id=${book.id})}">
                         <h5 class="card-title text-white text-truncate" th:text="${book.title}"
                             style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-all;">
-
                         </h5>
                     </a>
 
