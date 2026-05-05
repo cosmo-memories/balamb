@@ -1,6 +1,6 @@
 <div th:fragment="carousel (bookList, carouselId)" xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <div th:id="${carouselId}" class="carousel slide" data-bs-ride="false" data-bs-interval="false">
+    <div th:id="${carouselId}" class="carousel slide shadow" data-bs-ride="false" data-bs-interval="false">
         <div class="carousel-inner">
             <div class="carousel-item" th:each="book, iterStat : ${bookList}" th:classappend="${iterStat.first ? 'active' : ''}">
                 <div th:replace="~{fragments/carouselCard :: carouselCard(book = ${book})}"></div>

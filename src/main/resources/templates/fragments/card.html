@@ -1,8 +1,8 @@
 <div th:fragment="card (book)" xmlns:th="http://www.w3.org/1999/xhtml" class="w-100">
 
-    <div class="card h-100 w-100 border-2 border-white bg-dark text-white">
+    <div class="card h-100 w-100 border-0 border-white text-bg-dark text-white shadow">
         <div class="row g-0 h-100">
-            <div class="col-4 col-md-3 bg-light border-end border-1"
+            <div class="col-4 col-md-3 bg-light border border-2"
                  style="aspect-ratio: 2 / 3; overflow: hidden;">
                 <img th:src="${book.image != null} ? @{~/uploads/images/{path}(path=${book.image})} : @{/images/PlaceholderCover.png}"
                      class="object-fit-cover w-100 h-100"

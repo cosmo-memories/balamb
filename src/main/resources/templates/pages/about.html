@@ -6,23 +6,38 @@
 <body>
 
 <section layout:fragment="content">
-    <h3 class="mt-2">About the Site</h3>
-    <p>
-        Balamb is a catalogue for my personal home library, and is being developed as a passion project on multiple fronts.
-        Not only is it about collecting and showing off books, it is also driven by a love of curating and maintaining information.
-        I am slowly working to get all my books added, as well as continuing to develop and improve the site itself.
-        Balamb is developed using the Java Spring framework, Bootstrap, and the Thymeleaf templating engine.
-        Expect further updates to include more search/filtering options, a redesigned layout, various invisible backend improvements, and support for more media types such as video games.
-        The <a href="/updates">updates page</a> includes details about new features, upcoming changes, and known bugs/issues.
-    </p>
-    <p>
-        In a future update this page will also include some statistics about the contents of the library. Check back soon!
-    </p>
-    <hr class="mt-0">
-    <h3>About the Admin</h3>
-    <p>
-        My name is David; I love books and databases and software development, and you can find my personal website <a href="https://cosmo-memories.github.io/">here</a>.
-    </p>
+
+    <div class="container d-flex justify-content-center mt-3">
+        <div class="row row-cols-1 g-4 mb-4 col-lg-11">
+            <div class="card flex-fill text-bg-dark text-white shadow">
+                <div class="card-body">
+                    <h3 class="mt-2">About the Site</h3>
+                    <p>
+                        Balamb is a catalogue for my personal home library, and is being developed as a passion project on multiple fronts.
+                        Not only is it about collecting and showing off books, it is also driven by a love of curating and maintaining information.
+                        I am slowly working to get all my books added, as well as continuing to develop and improve the site itself.
+                        Balamb is developed using the Java Spring framework, Bootstrap, and the Thymeleaf templating engine.
+                        Expect further updates to include more search/filtering options, a redesigned layout, various invisible backend improvements, and support for more media types such as video games.
+                        The <a href="/updates">updates page</a> includes details about new features, upcoming changes, and known bugs/issues.
+                    </p>
+                    <p>
+                        In a future update this page will also include some statistics about the contents of the library. Check back soon!
+                    </p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="card flex-fill text-bg-dark text-white shadow mt-1">
+                <div class="card-body">
+                    <h3>About the Admin</h3>
+                    <p>
+                        My name is David; I love books and databases and software development, and you can find my personal website <a href="https://cosmo-memories.github.io/">here</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 </body>
