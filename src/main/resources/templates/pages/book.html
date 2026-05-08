@@ -44,9 +44,9 @@
     <div class="container-fluid py-4 px-4 px-md-5">
         <div class="row g-4 mt-2">
             <div class="col-12 col-lg-8">
-                <div class="card mb-4 border-0 bg-transparent">
-                    <div class="row g-4">
-                        <div class="col-12 col-md-auto">
+                <div class="card mb-4 border-0" style="--bs-card-bg: #2b3035;">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-auto p-3">
                             <div class="book-cover-container shadow-lg border border-white border-2">
                                 <img th:src="@{~/uploads/images/{path}(path=${book.image})}"
                                      onerror="this.src='/images/PlaceholderCover.png';"
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="col-12 col-md">
-                            <div class="card-body p-0 text-white">
+                            <div class="card-body p-3 text-white">
                                 <h1 class="display-5 fw-bold mb-1" th:text="${book.title}"></h1>
                                 <p class="h4 text-secondary mb-3" th:if="${book.series != null}">
                                     <span th:text="${book.series}"></span>
@@ -86,8 +86,12 @@
                 </div>
 
                 <div class="my-4 text-white">
-                    <b class="mb-3 d-block">Notes:</b>
-                    <span th:text="${book.note}"></span><span th:if="${book.note == null}" th:text="None."></span>
+                    <div class="card flex-fill text-white shadow" style="--bs-card-bg: #2b3035;">
+                        <div class="card-body">
+                            <b class="mb-3 d-block">Notes:</b>
+                            <span th:text="${book.note}"></span><span th:if="${book.note == null}" th:text="None."></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
