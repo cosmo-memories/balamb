@@ -6,19 +6,23 @@
 <body>
 
 <section layout:fragment="content">
-    <div class="row d-flex justify-content-between">
-        <div class="col-auto">
-            <h1 class="text-primary">Error</h1>
+
+    <div class="container d-flex justify-content-center mt-3">
+        <div class="row row-cols-1 g-4 mb-4 col-lg-11">
+            <div class="card flex-fill text-white shadow" style="--bs-card-bg: #2b3035;">
+                <div class="card-body">
+                    <h3 class="mt-2">Something went wrong :(</h3>
+                    <p>
+                        Either your request was malformed in some way or you tried to do something you shouldn't have.
+                    </p>
+                    <p>
+                        If you think this is the result of a bug, please let me know on <a href="https://github.com/cosmo-memories/balamb/issues">GitHub</a>.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-    <hr class="mt-0">
-    <h3>Something went wrong :(</h3>
-    <p>
-        Either your request was malformed in some way or you tried to do something you shouldn't have.
-    </p>
-    <p>
-        If you think this is the result of a bug, please let me know on <a href="https://github.com/cosmo-memories/balamb/issues">GitHub</a>.
-    </p>
+
 </section>
 
 </body>

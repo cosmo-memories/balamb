@@ -389,7 +389,7 @@ public class MainControllerTests {
                 .andExpect(model().attribute("updateList", hasProperty("content", hasSize(0))))
                 .andReturn();
 
-        assertThat(response.getResponse().getContentAsString(), containsString("Add Update"));
+        assertThat(response.getResponse().getContentAsString(), containsString("New Update"));
     }
 
     @Test
@@ -420,7 +420,7 @@ public class MainControllerTests {
                 .andExpect(model().attribute("updateList", hasProperty("content", contains(update))))
                 .andReturn();
 
-        assertThat(response.getResponse().getContentAsString(), containsString("Add Update"));
+        assertThat(response.getResponse().getContentAsString(), containsString("New Update"));
     }
 
     @Test

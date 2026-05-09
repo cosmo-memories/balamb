@@ -35,8 +35,10 @@
 
     <hr class="mt-0">
 
-    <div th:if="${bookList.empty}">
-        No books to show :(
+    <div class="row g-4 mb-4" th:if="${bookList.empty}">
+        <div class="col d-flex justify-content-center">
+            No results :( Try expanding your search parameters.
+        </div>
     </div>
 
     <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-4">
@@ -48,7 +50,7 @@
     <!--  Reference: https://stackoverflow.com/questions/18490820/spring-thymeleaf-how-to-implement-pagination-for-a-list  -->
     <div class="table-pagination">
         <ul class="pagination justify-content-center">
-            <li th:class="${bookList.number eq 0} ? 'disabled' : ''">
+            <li th:class="${bookList.number eq 0} ? 'disabled text-decoration-line-through' : ''">
                 <a th:if="${not bookList.first}" th:href="'/browse?pageNo=' + ${bookList.number - 1}
                         + (${#strings.isEmpty(genre)} ? '' : '&genre=' + ${genre})
                         + (${#strings.isEmpty(category)} ? '' : '&category=' + ${category})
@@ -60,7 +62,7 @@
             <li class="mx-2">
                 |
             </li>
-            <li th:class="${bookList.number + 1 ge bookList.totalPages} ? 'disabled' : ''">
+            <li th:class="${bookList.number + 1 ge bookList.totalPages} ? 'disabled text-decoration-line-through' : ''">
                 <a th:if="${not bookList.last}" th:href="'/browse?pageNo=' + ${bookList.number + 1}
                         + (${#strings.isEmpty(genre)} ? '' : '&genre=' + ${genre})
                         + (${#strings.isEmpty(category)} ? '' : '&category=' + ${category})

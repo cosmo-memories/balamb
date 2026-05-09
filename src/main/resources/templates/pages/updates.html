@@ -83,7 +83,7 @@
 
     <div class="table-pagination">
         <ul class="pagination justify-content-center">
-            <li th:class="${updateList.number eq 0} ? 'disabled' : ''">
+            <li th:class="${updateList.number eq 0} ? 'disabled text-decoration-line-through' : ''">
                 <a th:if="${not updateList.first}" th:href="'/updates?pageNo=' + ${updateList.number - 1}
                         + (${#strings.isEmpty(type)} ? '' : '&type=' + ${type})">
                     Previous
@@ -93,7 +93,7 @@
             <li class="mx-2">
                 |
             </li>
-            <li th:class="${updateList.number + 1 ge updateList.totalPages} ? 'disabled' : ''">
+            <li th:class="${updateList.number + 1 ge updateList.totalPages} ? 'disabled text-decoration-line-through' : ''">
                 <a th:if="${not updateList.last}" th:href="'/updates?pageNo=' + ${updateList.number + 1} + (${#strings.isEmpty(type)} ? '' : '&type=' + ${type})">
                     Next
                 </a>
