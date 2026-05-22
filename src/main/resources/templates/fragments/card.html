@@ -16,17 +16,20 @@
                             style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                         </h5>
                     </a>
-                    <p class="card-text text-secondary text-truncate">
+                    <p th:if="${book.series != null}" class="card-text text-secondary text-truncate mb-0">
                         <span th:text="${book.series}"></span>
-                        &nbsp;
                     </p>
-                    <p class="card-text text-secondary text-truncate">
-                        by <b th:text="${book.authors[0].firstName} + ' ' + ${book.authors[0].lastName}"></b>
+                    <p class="card-text text-secondary text-truncate mt-2">
+                        by <span th:each="author, iterStat: ${book.authors}">
+                                <b class="text-secondary" th:text="${author.firstName} + ' ' + ${author.lastName}"></b><span class="text-secondary" th:if="${!iterStat.last}">, </span>
+                           </span>
                     </p>
                     <p class="card-text mt-auto text-truncate">
                         <b th:text="${book.category.getLabel()}" class="text-secondary"></b>
                         <b class="mx-1">•</b>
                         <b th:text="${book.genre.getLabel()}" class="text-secondary"></b>
+                        <b th:if="${book.subgenre != null}" class="mx-1">•</b>
+                        <b th:if="${book.subgenre != null}" th:text="${book.subgenre.getLabel()}" class="text-secondary"></b>
                     </p>
                 </div>
             </div>
